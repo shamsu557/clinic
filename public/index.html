@@ -5,30 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DiabetesCare Telemedicine - Professional Healthcare Platform</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: {
-                            DEFAULT: '#0066FF',
-                            dark: '#0052CC',
-                            light: '#E6F0FF'
-                        },
-                        secondary: {
-                            DEFAULT: '#00C853',
-                            light: '#E8F5E9'
-                        },
-                        accent: {
-                            DEFAULT: '#FF3D00',
-                            light: '#FFE0DB'
-                        }
-                    }
-                }
-            }
-        }
-    </script>
     <style>
         * {
             margin: 0;
@@ -215,124 +191,6 @@
             box-shadow: 0 2px 6px rgba(255, 61, 0, 0.4);
         }
 
-        /* Notification Dropdown */
-        .notification-dropdown {
-            position: absolute;
-            top: 100%;
-            right: 0;
-            margin-top: 8px;
-            width: 380px;
-            background: white;
-            border-radius: 12px;
-            box-shadow: var(--shadow-xl);
-            border: 1px solid var(--neutral-200);
-            display: none;
-            max-height: 500px;
-            overflow: hidden;
-            flex-direction: column;
-        }
-
-        .notification-dropdown.show {
-            display: flex;
-        }
-
-        .notification-header {
-            padding: 16px 20px;
-            border-bottom: 1px solid var(--neutral-200);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .notification-header h3 {
-            font-size: 16px;
-            font-weight: 700;
-            color: var(--neutral-800);
-        }
-
-        .notification-list {
-            overflow-y: auto;
-            max-height: 400px;
-        }
-
-        .notification-item {
-            padding: 16px 20px;
-            border-bottom: 1px solid var(--neutral-100);
-            display: flex;
-            justify-content: space-between;
-            align-items: start;
-            gap: 12px;
-            transition: background 0.2s;
-        }
-
-        .notification-item:hover {
-            background: var(--neutral-50);
-        }
-
-        .notification-item.unread {
-            background: var(--primary-light);
-        }
-
-        .notification-content {
-            flex: 1;
-        }
-
-        .notification-text {
-            font-size: 14px;
-            color: var(--neutral-800);
-            margin-bottom: 4px;
-        }
-
-        .notification-time {
-            font-size: 12px;
-            color: var(--neutral-500);
-        }
-
-        .notification-actions {
-            display: flex;
-            gap: 8px;
-        }
-
-        .notification-clear-btn {
-            padding: 4px 8px;
-            border: none;
-            background: var(--neutral-200);
-            color: var(--neutral-700);
-            border-radius: 6px;
-            font-size: 11px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .notification-clear-btn:hover {
-            background: var(--accent);
-            color: white;
-        }
-
-        .notification-footer {
-            padding: 12px 20px;
-            border-top: 1px solid var(--neutral-200);
-            display: flex;
-            justify-content: center;
-        }
-
-        .clear-all-btn {
-            padding: 8px 16px;
-            border: none;
-            background: var(--accent-light);
-            color: var(--accent);
-            border-radius: 8px;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .clear-all-btn:hover {
-            background: var(--accent);
-            color: white;
-        }
-
         /* Banner */
         .availability-banner {
             background: linear-gradient(135deg, var(--primary), var(--secondary));
@@ -340,218 +198,247 @@
             padding: 14px 0;
             text-align: center;
             font-weight: 600;
+            font-size: 15px;
+            overflow: hidden;
+            position: relative;
         }
 
-        /* Main Container */
-        .main-container {
+        .banner-content {
+            animation: scroll-banner 25s linear infinite;
+            white-space: nowrap;
+            display: inline-block;
+            padding-left: 100%;
+        }
+
+        @keyframes scroll-banner {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-100%); }
+        }
+
+        /* Page Container */
+        .page-container {
+            display: none;
+            animation: fadeInUp 0.4s ease-out;
+        }
+
+        .page-container.active {
+            display: block;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .content-wrapper {
             max-width: 1400px;
-            margin: 40px auto;
-            padding: 0 32px;
+            margin: 0 auto;
+            padding: 48px 32px;
         }
 
-        /* Cards */
-        .card {
-            background: white;
-            border-radius: 16px;
-            padding: 28px;
-            box-shadow: var(--shadow-md);
-            margin-bottom: 28px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 80px 32px;
+            background: linear-gradient(135deg, var(--primary-light) 0%, var(--secondary-light) 100%);
+            border-radius: 24px;
+            margin-bottom: 64px;
         }
 
-        .card:hover {
-            box-shadow: var(--shadow-lg);
-            transform: translateY(-2px);
+        .hero-logo {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 32px;
+            border-radius: 24px;
+            box-shadow: var(--shadow-xl);
         }
 
-        .card-title {
-            font-size: 20px;
-            font-weight: 700;
+        .hero h1 {
+            font-size: 56px;
+            font-weight: 900;
             color: var(--neutral-900);
             margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
+            letter-spacing: -1px;
+            line-height: 1.1;
         }
 
-        /* Stats Grid */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 24px;
-            margin-bottom: 32px;
-        }
-
-        .stat-card {
-            background: linear-gradient(135deg, var(--primary-light) 0%, white 100%);
-            border: 2px solid var(--primary-light);
-            border-radius: 16px;
-            padding: 24px;
-            transition: all 0.3s;
-        }
-
-        .stat-card:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-lg);
-            border-color: var(--primary);
-        }
-
-        .stat-card.secondary {
-            background: linear-gradient(135deg, var(--secondary-light) 0%, white 100%);
-            border-color: var(--secondary-light);
-        }
-
-        .stat-card.secondary:hover {
-            border-color: var(--secondary);
-        }
-
-        .stat-card.accent {
-            background: linear-gradient(135deg, var(--accent-light) 0%, white 100%);
-            border-color: var(--accent-light);
-        }
-
-        .stat-card.accent:hover {
-            border-color: var(--accent);
-        }
-
-        .stat-icon {
-            font-size: 36px;
-            margin-bottom: 12px;
-        }
-
-        .stat-value {
-            font-size: 32px;
-            font-weight: 800;
-            color: var(--neutral-900);
-            margin-bottom: 6px;
-        }
-
-        .stat-label {
-            font-size: 14px;
-            color: var(--neutral-600);
-            font-weight: 600;
-        }
-
-        /* Appointments List */
-        .appointment-item {
-            background: var(--neutral-50);
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 16px;
-            border-left: 4px solid var(--primary);
-            transition: all 0.2s;
-        }
-
-        .appointment-item:hover {
-            background: var(--primary-light);
-            transform: translateX(4px);
-        }
-
-        .appointment-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: start;
-            margin-bottom: 12px;
-        }
-
-        .appointment-patient {
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--neutral-900);
-        }
-
-        .appointment-time {
-            background: var(--primary);
-            color: white;
-            padding: 6px 14px;
-            border-radius: 8px;
-            font-size: 13px;
-            font-weight: 600;
-        }
-
-        .appointment-details {
-            font-size: 14px;
+        .hero p {
+            font-size: 20px;
             color: var(--neutral-700);
-            margin-bottom: 12px;
+            margin-bottom: 40px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.6;
         }
 
-        .appointment-actions {
+        .hero-buttons {
             display: flex;
-            gap: 10px;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
         }
 
         .btn {
-            padding: 10px 20px;
+            padding: 16px 40px;
+            border-radius: 12px;
             border: none;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 600;
+            font-size: 16px;
+            font-weight: 700;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
         }
 
         .btn-primary {
             background: var(--primary);
             color: white;
+            box-shadow: 0 8px 20px rgba(0, 102, 255, 0.3);
         }
 
         .btn-primary:hover {
             background: var(--primary-dark);
-            transform: translateY(-1px);
+            box-shadow: 0 12px 28px rgba(0, 102, 255, 0.4);
+            transform: translateY(-3px);
         }
 
         .btn-secondary {
-            background: var(--secondary);
-            color: white;
-        }
-
-        .btn-secondary:hover {
-            background: #00A344;
-        }
-
-        .btn-outline {
-            background: transparent;
-            border: 2px solid var(--neutral-300);
-            color: var(--neutral-700);
-        }
-
-        .btn-outline:hover {
-            border-color: var(--primary);
+            background: white;
             color: var(--primary);
-        }
-
-        /* Quick Actions */
-        .quick-actions {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 16px;
-        }
-
-        .action-btn {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            color: white;
-            padding: 20px;
-            border-radius: 12px;
-            border: none;
-            cursor: pointer;
-            text-align: center;
-            font-size: 15px;
-            font-weight: 600;
-            transition: all 0.3s;
+            border: 2px solid var(--primary);
             box-shadow: var(--shadow-md);
         }
 
-        .action-btn:hover {
-            transform: translateY(-4px);
+        .btn-secondary:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        /* Cards */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 32px;
+            margin-bottom: 64px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid var(--neutral-200);
+            cursor: pointer;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
             box-shadow: var(--shadow-xl);
+            border-color: var(--primary);
         }
 
-        .action-btn.secondary {
-            background: linear-gradient(135deg, var(--secondary) 0%, #00A344 100%);
+        .card-icon {
+            font-size: 56px;
+            margin-bottom: 24px;
+            display: block;
         }
 
-        .action-btn.accent {
-            background: linear-gradient(135deg, var(--accent) 0%, #E63900 100%);
+        .card h3 {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: var(--neutral-900);
+        }
+
+        .card p {
+            color: var(--neutral-600);
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        /* Form Container */
+        .form-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 24px;
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+        }
+
+        .form-header {
+            padding: 32px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+        }
+
+        .form-header h2 {
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .form-header p {
+            opacity: 0.9;
+            font-size: 15px;
+        }
+
+        .form-body {
+            padding: 40px;
+        }
+
+        .form-group {
+            margin-bottom: 28px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--neutral-700);
+            margin-bottom: 10px;
+        }
+
+        .form-input,
+        .form-select,
+        .form-textarea {
+            width: 100%;
+            padding: 14px 18px;
+            border: 2px solid var(--neutral-300);
+            border-radius: 12px;
+            font-size: 15px;
+            font-family: inherit;
+            transition: all 0.2s;
+            background: white;
+        }
+
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px var(--primary-light);
+        }
+
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
         }
 
         /* Modal */
@@ -576,9 +463,9 @@
 
         .modal-content {
             background: white;
-            border-radius: 20px;
-            max-width: 600px;
+            border-radius: 24px;
             width: 100%;
+            max-width: 600px;
             max-height: 90vh;
             overflow-y: auto;
             box-shadow: var(--shadow-xl);
@@ -588,16 +475,16 @@
         @keyframes modalSlideIn {
             from {
                 opacity: 0;
-                transform: translateY(-40px);
+                transform: scale(0.9) translateY(20px);
             }
             to {
                 opacity: 1;
-                transform: translateY(0);
+                transform: scale(1) translateY(0);
             }
         }
 
         .modal-header {
-            padding: 24px 28px;
+            padding: 28px 32px;
             border-bottom: 1px solid var(--neutral-200);
             display: flex;
             justify-content: space-between;
@@ -605,116 +492,265 @@
         }
 
         .modal-title {
-            font-size: 22px;
+            font-size: 24px;
             font-weight: 800;
             color: var(--neutral-900);
         }
 
         .modal-close {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
             border: none;
             background: var(--neutral-100);
-            font-size: 24px;
             cursor: pointer;
+            font-size: 24px;
+            color: var(--neutral-600);
             transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
 
         .modal-close:hover {
-            background: var(--accent);
-            color: white;
+            background: var(--neutral-200);
+            color: var(--neutral-900);
             transform: rotate(90deg);
         }
 
         .modal-body {
-            padding: 28px;
+            padding: 32px;
         }
 
-        /* Forms */
-        .form-group {
-            margin-bottom: 20px;
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 24px;
+            margin-bottom: 48px;
         }
 
-        .form-label {
-            display: block;
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--neutral-700);
+        .stat-card {
+            background: white;
+            padding: 32px;
+            border-radius: 20px;
+            box-shadow: var(--shadow-md);
+            border-left: 4px solid var(--primary);
+            transition: all 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateX(4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .stat-value {
+            font-size: 40px;
+            font-weight: 900;
+            color: var(--primary);
             margin-bottom: 8px;
         }
 
-        .form-input,
-        .form-select,
-        .form-textarea {
+        .stat-label {
+            font-size: 14px;
+            color: var(--neutral-600);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Table */
+        .table-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: var(--shadow-md);
+            overflow: hidden;
+        }
+
+        .table-header {
+            padding: 24px 32px;
+            border-bottom: 1px solid var(--neutral-200);
+            background: var(--neutral-50);
+        }
+
+        .table-header h3 {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--neutral-900);
+        }
+
+        table {
             width: 100%;
-            padding: 12px 16px;
-            border: 2px solid var(--neutral-300);
-            border-radius: 10px;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: var(--neutral-50);
+            padding: 16px 24px;
+            text-align: left;
+            font-weight: 700;
+            font-size: 13px;
+            color: var(--neutral-700);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--neutral-200);
             font-size: 15px;
-            font-family: inherit;
-            transition: all 0.2s;
         }
 
-        .form-input:focus,
-        .form-select:focus,
-        .form-textarea:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 4px var(--primary-light);
+        tr:hover {
+            background: var(--neutral-50);
         }
 
-        .form-textarea {
-            min-height: 100px;
-            resize: vertical;
+        /* Badge */
+        .badge {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
-        .form-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
+        .badge-success {
+            background: var(--secondary-light);
+            color: var(--secondary);
+        }
+
+        .badge-warning {
+            background: #FFF3E0;
+            color: #F57C00;
+        }
+
+        .badge-info {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .badge-danger {
+            background: var(--accent-light);
+            color: var(--accent);
+        }
+
+        /* Alert */
+        .alert {
+            padding: 20px 24px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            font-size: 15px;
+            display: flex;
+            align-items: start;
             gap: 16px;
         }
 
-        /* Mobile Menu Toggle */
-        .mobile-menu-btn {
-            display: none;
-            padding: 10px;
-            border: none;
-            background: var(--neutral-100);
-            border-radius: 8px;
-            cursor: pointer;
+        .alert-success {
+            background: var(--secondary-light);
+            color: var(--secondary);
+            border-left: 4px solid var(--secondary);
         }
 
-        .mobile-menu-btn:hover {
-            background: var(--neutral-200);
+        .alert-info {
+            background: var(--primary-light);
+            color: var(--primary);
+            border-left: 4px solid var(--primary);
+        }
+
+        .alert-warning {
+            background: #FFF3E0;
+            color: #F57C00;
+            border-left: 4px solid #F57C00;
+        }
+
+        /* Payment Summary */
+        .payment-summary {
+            background: linear-gradient(135deg, var(--primary-light), var(--secondary-light));
+            padding: 28px;
+            border-radius: 16px;
+            margin-bottom: 28px;
+        }
+
+        .payment-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            font-size: 15px;
+        }
+
+        .payment-row.total {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--primary);
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid rgba(0, 102, 255, 0.2);
+        }
+
+        /* Notification Panel */
+        .notification-panel {
+            position: fixed;
+            right: -420px;
+            top: 72px;
+            width: 420px;
+            height: calc(100vh - 72px);
+            background: white;
+            box-shadow: -4px 0 20px rgba(0, 0, 0, 0.1);
+            transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1500;
+            overflow-y: auto;
+        }
+
+        .notification-panel.open {
+            right: 0;
+        }
+
+        .notification-header {
+            padding: 24px 28px;
+            border-bottom: 1px solid var(--neutral-200);
+            background: var(--neutral-50);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .notification-header h3 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .notification-item {
+            padding: 20px 28px;
+            border-bottom: 1px solid var(--neutral-200);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .notification-item:hover {
+            background: var(--neutral-50);
+        }
+
+        .notification-item.unread {
+            background: var(--primary-light);
+            border-left: 4px solid var(--primary);
         }
 
         /* Responsive */
         @media (max-width: 768px) {
-            .mobile-menu-btn {
-                display: block;
+            .hero h1 {
+                font-size: 36px;
+            }
+
+            .hero p {
+                font-size: 16px;
             }
 
             .nav-menu {
-                position: absolute;
-                top: 100%;
-                left: 0;
-                right: 0;
-                background: white;
-                flex-direction: column;
-                padding: 20px;
-                box-shadow: var(--shadow-lg);
                 display: none;
             }
 
-            .nav-menu.active {
-                display: flex;
-            }
-
-            .stats-grid {
+            .card-grid {
                 grid-template-columns: 1fr;
             }
 
@@ -722,9 +758,83 @@
                 grid-template-columns: 1fr;
             }
 
-            .notification-dropdown {
-                width: calc(100vw - 40px);
-                right: -120px;
+            .notification-panel {
+                width: 100%;
+                right: -100%;
+            }
+
+            .stat-value {
+                font-size: 32px;
+            }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Mobile Menu */
+        .mobile-menu-btn {
+            display: none;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            color: var(--neutral-700);
+            transition: all 0.2s;
+        }
+
+        .mobile-menu-btn:hover {
+            color: var(--primary);
+        }
+
+        .mobile-menu {
+            display: none;
+            background: white;
+            border-top: 1px solid var(--neutral-200);
+            padding: 12px 0;
+        }
+
+        .mobile-menu.active {
+            display: block;
+        }
+
+        .mobile-menu-item {
+            width: 100%;
+            padding: 14px 32px;
+            background: transparent;
+            border: none;
+            text-align: left;
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--neutral-700);
+            cursor: pointer;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+        }
+
+        .mobile-menu-item:hover {
+            background: var(--neutral-50);
+            color: var(--primary);
+            border-left-color: var(--primary);
+        }
+
+        .mobile-menu-item.primary {
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        .mobile-menu-item.danger {
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        @media (max-width: 768px) {
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .nav-menu {
+                display: none;
             }
         }
     </style>
@@ -732,372 +842,902 @@
 <body>
     <!-- Top Bar -->
     <div class="top-bar">
-        🏥 Emergency Diabetes Support: 0800-DIABETES-911 (24/7 Hotline)
+        ✨ Professional Diabetes Care | Secure Video Consultations | E-Prescriptions Available
     </div>
 
-    <!-- Navigation -->
-    <nav class="navbar">
+    <!-- Public Navigation -->
+    <nav class="navbar" id="publicNav">
         <div class="nav-container">
-            <div class="logo">
-                <img src="https://static.vecteezy.com/system/resources/thumbnails/019/766/240/small_2x/medical-cross-logo-template-illustration-design-free-vector.jpg" alt="DiabetesCare Logo" class="logo-img">
+            <div class="logo" onclick="showPage('home')">
+                <img src="./assets/images/theclinic.png" alt="DiabetesCare Logo" class="logo-img" onerror="this.src='./theclinic.png'">
                 <div class="logo-text">
                     <div class="logo-title">DiabetesCare</div>
                     <div class="logo-subtitle">Telemedicine Platform</div>
                 </div>
             </div>
-            <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <line x1="3" y1="12" x2="21" y2="12"></line>
-                    <line x1="3" y1="6" x2="21" y2="6"></line>
-                    <line x1="3" y1="18" x2="21" y2="18"></line>
-                </svg>
-            </button>
-            <div class="nav-menu" id="navMenu">
-                <button class="nav-btn" onclick="switchView('doctor')">👨‍⚕️ Doctor View</button>
-                <button class="nav-btn" onclick="switchView('patient')">👤 Patient View</button>
-                <div style="position: relative;">
-                    <button class="notification-btn" onclick="toggleNotifications()">
-                        🔔
-                        <span class="notification-badge" id="notificationCount">0</span>
-                    </button>
-                    <div class="notification-dropdown" id="notificationDropdown">
-                        <div class="notification-header">
-                            <h3>Notifications</h3>
-                            <button class="clear-all-btn" onclick="clearAllNotifications()">Clear All</button>
-                        </div>
-                        <div class="notification-list" id="notificationList">
-                            <div class="notification-item" style="text-align: center; padding: 40px 20px; color: var(--neutral-500);">
-                                No notifications yet
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <button class="nav-btn primary" onclick="openModal('availabilityModal')">⚙️ Settings</button>
-                <button class="nav-btn danger" onclick="logout()">🚪 Logout</button>
+            <div class="nav-menu">
+                <button class="nav-btn" onclick="showPage('home')">Home</button>
+                <button class="nav-btn" onclick="showPage('login')">Login</button>
+                <button class="nav-btn primary" onclick="showPage('register')">Get Started</button>
             </div>
+            <!-- Mobile Menu Toggle -->
+            <button class="mobile-menu-btn" id="publicMenuBtn" onclick="toggleMobileMenu('public')">
+                <span style="font-size: 28px;">☰</span>
+            </button>
+        </div>
+        <!-- Mobile Menu -->
+        <div class="mobile-menu hidden" id="publicMobileMenu">
+            <button class="mobile-menu-item" onclick="showPage('home'); closeMobileMenus()">Home</button>
+            <button class="mobile-menu-item" onclick="showPage('login'); closeMobileMenus()">Login</button>
+            <button class="mobile-menu-item primary" onclick="showPage('register'); closeMobileMenus()">Get Started</button>
+        </div>
+    </nav>
+
+    <!-- Patient Navigation -->
+    <nav class="navbar hidden" id="patientNav">
+        <div class="nav-container">
+            <div class="logo">
+                <img src="./assets/images/theclinic.png" alt="DiabetesCare Logo" class="logo-img" onerror="this.src='./theclinic.png'">
+                <div class="logo-text">
+                    <div class="logo-title">Patient Portal</div>
+                    <div class="logo-subtitle">Welcome Back</div>
+                </div>
+            </div>
+            <div class="nav-menu">
+                <button class="nav-btn" onclick="showPage('patient-dashboard')">🏠 Dashboard</button>
+                <div class="notification-btn" onclick="toggleNotifications('patient')">
+                    🔔
+                    <span class="notification-badge" id="patientBadge">0</span>
+                </div>
+                <button class="nav-btn danger" onclick="logout()">Logout</button>
+            </div>
+            <!-- Mobile Menu Toggle -->
+            <button class="mobile-menu-btn" id="patientMenuBtn" onclick="toggleMobileMenu('patient')">
+                <span style="font-size: 28px;">☰</span>
+            </button>
+        </div>
+        <!-- Mobile Menu -->
+        <div class="mobile-menu hidden" id="patientMobileMenu">
+            <button class="mobile-menu-item" onclick="showPage('patient-dashboard'); closeMobileMenus()">🏠 Dashboard</button>
+            <button class="mobile-menu-item" onclick="toggleNotifications('patient'); closeMobileMenus()">🔔 Notifications</button>
+            <button class="mobile-menu-item danger" onclick="logout()">Logout</button>
+        </div>
+    </nav>
+
+    <!-- Doctor Navigation -->
+    <nav class="navbar hidden" id="doctorNav">
+        <div class="nav-container">
+            <div class="logo">
+                <img src="./assets/images/theclinic.png" alt="DiabetesCare Logo" class="logo-img" onerror="this.src='./theclinic.png'">
+                <div class="logo-text">
+                    <div class="logo-title">Dr. Ahmad Ismail</div>
+                    <div class="logo-subtitle">Admin Dashboard</div>
+                </div>
+            </div>
+            <div class="nav-menu">
+                <button class="nav-btn" onclick="showPage('doctor-dashboard')">🏠 Dashboard</button>
+                <div class="notification-btn" onclick="toggleNotifications('doctor')">
+                    🔔
+                    <span class="notification-badge" id="doctorBadge">0</span>
+                </div>
+                <button class="nav-btn danger" onclick="logout()">Logout</button>
+            </div>
+            <!-- Mobile Menu Toggle -->
+            <button class="mobile-menu-btn" id="doctorMenuBtn" onclick="toggleMobileMenu('doctor')">
+                <span style="font-size: 28px;">☰</span>
+            </button>
+        </div>
+        <!-- Mobile Menu -->
+        <div class="mobile-menu hidden" id="doctorMobileMenu">
+            <button class="mobile-menu-item" onclick="showPage('doctor-dashboard'); closeMobileMenus()">🏠 Dashboard</button>
+            <button class="mobile-menu-item" onclick="toggleNotifications('doctor'); closeMobileMenus()">🔔 Notifications</button>
+            <button class="mobile-menu-item danger" onclick="logout()">Logout</button>
         </div>
     </nav>
 
     <!-- Availability Banner -->
-    <div class="availability-banner" id="availabilityBanner">
-        ✅ Available Days: <span id="availableDays">Monday, Wednesday, Friday</span>
+    <div class="availability-banner hidden" id="availabilityBanner">
+        <div class="banner-content">
+            📅 Dr. Ahmad Ismail is available for consultations: <strong id="availableDays">Monday, Friday, Saturday</strong> | Consultation Hours: 9:00 AM - 5:00 PM | 💊 Book Your Appointment Today
+        </div>
     </div>
 
-    <!-- Main Content -->
-    <div class="main-container">
-        <!-- DOCTOR VIEW -->
-        <div id="doctorView">
-            <h1 style="font-size: 32px; font-weight: 800; color: var(--neutral-900); margin-bottom: 32px;">
-                👨‍⚕️ Dr. Ahmad Ismail - Dashboard
-            </h1>
+    <!-- Notification Panel (Patient) -->
+    <div class="notification-panel" id="patientNotificationPanel">
+        <div class="notification-header">
+            <h3>Notifications</h3>
+            <button class="nav-btn" style="padding: 6px 12px; font-size: 12px;" onclick="clearNotifications('patient')">Clear All</button>
+        </div>
+        <div id="patientNotificationList"></div>
+    </div>
 
-            <!-- Stats -->
+    <!-- Notification Panel (Doctor) -->
+    <div class="notification-panel" id="doctorNotificationPanel">
+        <div class="notification-header">
+            <h3>Notifications</h3>
+            <button class="nav-btn" style="padding: 6px 12px; font-size: 12px;" onclick="clearNotifications('doctor')">Clear All</button>
+        </div>
+        <div id="doctorNotificationList"></div>
+    </div>
+
+    <!-- HOME PAGE -->
+    <div id="home" class="page-container active">
+        <div class="content-wrapper">
+            <div class="hero">
+                <img src="./assets/images/theclinic.png" alt="DiabetesCare Logo" class="hero-logo" onerror="this.src='./theclinic.png'">
+                <h1>Professional Diabetes Care at Your Fingertips</h1>
+                <p>Connect with Dr. Ahmad Ismail through secure video consultations. Get expert diabetes management from the comfort of your home.</p>
+                <div class="hero-buttons">
+                    <button class="btn btn-primary" onclick="showPage('register')">
+                        ✨ Get Started Free
+                    </button>
+                    <button class="btn btn-secondary" onclick="showPage('login')">
+                        🔐 Sign In
+                    </button>
+                </div>
+            </div>
+
             <div class="stats-grid">
                 <div class="stat-card">
-                    <div class="stat-icon">👥</div>
-                    <div class="stat-value">248</div>
-                    <div class="stat-label">Total Patients</div>
+                    <div class="stat-value">500+</div>
+                    <div class="stat-label">Patients Treated</div>
                 </div>
-                <div class="stat-card secondary">
-                    <div class="stat-icon">📅</div>
-                    <div class="stat-value">12</div>
-                    <div class="stat-label">Today's Appointments</div>
-                </div>
-                <div class="stat-card accent">
-                    <div class="stat-icon">⏰</div>
-                    <div class="stat-value">3</div>
-                    <div class="stat-label">Pending Consultations</div>
-                </div>
-            </div>
-
-            <!-- Quick Actions -->
-            <div class="card">
-                <h2 class="card-title">⚡ Quick Actions</h2>
-                <div class="quick-actions">
-                    <button class="action-btn" onclick="openModal('createPatientModal')">
-                        ➕ Create Patient
-                    </button>
-                    <button class="action-btn secondary" onclick="openModal('prescriptionModal')">
-                        💊 Write Prescription
-                    </button>
-                    <button class="action-btn accent" onclick="openModal('labTestModal')">
-                        🔬 Request Lab Tests
-                    </button>
-                </div>
-            </div>
-
-            <!-- Today's Appointments -->
-            <div class="card">
-                <h2 class="card-title">📅 Today's Appointments</h2>
-                
-                <div class="appointment-item">
-                    <div class="appointment-header">
-                        <div class="appointment-patient">Shamsuddeen Usman</div>
-                        <div class="appointment-time">09:00 AM</div>
-                    </div>
-                    <div class="appointment-details">
-                        📋 Follow-up Consultation • Type 2 Diabetes Management<br>
-                        📞 +234 803 456 7890 • Patient ID: DCP-2024-1234
-                    </div>
-                    <div class="appointment-actions">
-                        <button class="btn btn-primary" onclick="startConsultation('Shamsuddeen Usman')">
-                            ▶️ Start Consultation
-                        </button>
-                        <button class="btn btn-secondary" onclick="openRescheduleModal('Shamsuddeen Usman', '09:00 AM')">
-                            🔄 Reschedule
-                        </button>
-                        <button class="btn btn-outline" onclick="viewPatientRecord('Shamsuddeen Usman')">
-                            📄 View Record
-                        </button>
-                    </div>
-                </div>
-
-                <div class="appointment-item">
-                    <div class="appointment-header">
-                        <div class="appointment-patient">Fatima Ismail</div>
-                        <div class="appointment-time">11:30 AM</div>
-                    </div>
-                    <div class="appointment-details">
-                        📋 New Patient Consultation • Initial Assessment<br>
-                        📞 +234 805 123 4567 • Patient ID: DCP-2024-5678
-                    </div>
-                    <div class="appointment-actions">
-                        <button class="btn btn-primary" onclick="startConsultation('Fatima Ismail')">
-                            ▶️ Start Consultation
-                        </button>
-                        <button class="btn btn-secondary" onclick="openRescheduleModal('Fatima Ismail', '11:30 AM')">
-                            🔄 Reschedule
-                        </button>
-                        <button class="btn btn-outline" onclick="viewPatientRecord('Fatima Ismail')">
-                            📄 View Record
-                        </button>
-                    </div>
-                </div>
-
-                <div class="appointment-item">
-                    <div class="appointment-header">
-                        <div class="appointment-patient">Jeneth Danjummai</div>
-                        <div class="appointment-time">02:00 PM</div>
-                    </div>
-                    <div class="appointment-details">
-                        📋 Lab Results Review • HbA1c Test Results<br>
-                        📞 +234 807 987 6543 • Patient ID: DCP-2024-9012
-                    </div>
-                    <div class="appointment-actions">
-                        <button class="btn btn-primary" onclick="startConsultation('Jeneth Danjummai')">
-                            ▶️ Start Consultation
-                        </button>
-                        <button class="btn btn-secondary" onclick="openRescheduleModal('Jeneth Danjummai', '02:00 PM')">
-                            🔄 Reschedule
-                        </button>
-                        <button class="btn btn-outline" onclick="viewPatientRecord('Jeneth Danjummai')">
-                            📄 View Record
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- PATIENT VIEW -->
-        <div id="patientView" style="display: none;">
-            <h1 style="font-size: 32px; font-weight: 800; color: var(--neutral-900); margin-bottom: 32px;">
-                👤 Patient Portal - Shamsuddeen Usman
-            </h1>
-
-            <!-- Patient Stats -->
-            <div class="stats-grid">
                 <div class="stat-card">
-                    <div class="stat-icon">📊</div>
-                    <div class="stat-value">6.8%</div>
-                    <div class="stat-label">Latest HbA1c</div>
+                    <div class="stat-value">1,200+</div>
+                    <div class="stat-label">Consultations</div>
                 </div>
-                <div class="stat-card secondary">
-                    <div class="stat-icon">📅</div>
-                    <div class="stat-value">1</div>
-                    <div class="stat-label">Upcoming Appointments</div>
+                <div class="stat-card">
+                    <div class="stat-value">98%</div>
+                    <div class="stat-label">Satisfaction Rate</div>
                 </div>
-                <div class="stat-card accent">
-                    <div class="stat-icon">💊</div>
-                    <div class="stat-value">3</div>
-                    <div class="stat-label">Active Prescriptions</div>
+                <div class="stat-card">
+                    <div class="stat-value">24/7</div>
+                    <div class="stat-label">Support Available</div>
                 </div>
             </div>
 
-            <!-- Patient Quick Actions -->
-            <div class="card">
-                <h2 class="card-title">⚡ Quick Actions</h2>
-                <div class="quick-actions">
-                    <button class="action-btn" onclick="openModal('bookAppointmentModal')">
-                        📅 Book Appointment
-                    </button>
-                    <button class="action-btn secondary" onclick="openModal('uploadTestModal')">
-                        📤 Upload Test Results
-                    </button>
-                    <button class="action-btn accent" onclick="viewPrescriptions()">
-                        💊 View Prescriptions
-                    </button>
+            <div class="card-grid">
+                <div class="card">
+                    <span class="card-icon">📹</span>
+                    <h3>Video Consultations</h3>
+                    <p>High-quality, secure video calls with Dr. Ahmad Ismail. Professional diabetes care without leaving home.</p>
                 </div>
-            </div>
-
-            <!-- Next Appointment -->
-            <div class="card">
-                <h2 class="card-title">📅 Your Next Appointment</h2>
-                <div class="appointment-item">
-                    <div class="appointment-header">
-                        <div class="appointment-patient">Dr. Ahmad Ismail</div>
-                        <div class="appointment-time">Tomorrow - 09:00 AM</div>
-                    </div>
-                    <div class="appointment-details">
-                        📋 Follow-up Consultation • Type 2 Diabetes Management<br>
-                        🏥 Virtual Consultation • Video Call Link will be sent 15 mins before
-                    </div>
-                    <div class="appointment-actions">
-                        <button class="btn btn-primary" onclick="joinConsultation()">
-                            📹 Join Consultation
-                        </button>
-                        <button class="btn btn-secondary" onclick="openRescheduleModal('Dr. Ahmad Ismail', 'Tomorrow - 09:00 AM')">
-                            🔄 Reschedule
-                        </button>
-                        <button class="btn btn-outline" onclick="cancelAppointment()">
-                            ❌ Cancel
-                        </button>
-                    </div>
+                <div class="card">
+                    <span class="card-icon">💊</span>
+                    <h3>E-Prescriptions</h3>
+                    <p>Receive digital prescriptions instantly after your consultation. Download and share with your pharmacy.</p>
+                </div>
+                <div class="card">
+                    <span class="card-icon">🧪</span>
+                    <h3>Lab Test Management</h3>
+                    <p>Upload test results directly to your portal. Doctor reviews and provides expert feedback.</p>
+                </div>
+                <div class="card">
+                    <span class="card-icon">🔒</span>
+                    <h3>HIPAA Compliant</h3>
+                    <p>Your health data is encrypted and secure. We follow international medical privacy standards.</p>
+                </div>
+                <div class="card">
+                    <span class="card-icon">💳</span>
+                    <h3>Secure Payments</h3>
+                    <p>Transparent pricing with secure payment processing. Pay once, reschedule anytime.</p>
+                </div>
+                <div class="card">
+                    <span class="card-icon">📱</span>
+                    <h3>Mobile Friendly</h3>
+                    <p>Access your health portal from any device. Fully responsive on mobile, tablet, and desktop.</p>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- MODALS -->
-
-    <!-- RESCHEDULE MODAL -->
-    <div id="rescheduleModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 class="modal-title">🔄 Reschedule Appointment</h2>
-                <button class="modal-close" onclick="closeModal('rescheduleModal')">×</button>
-            </div>
-            <div class="modal-body">
-                <div style="background: var(--primary-light); padding: 16px; border-radius: 10px; margin-bottom: 20px;">
-                    <div style="font-size: 14px; color: var(--neutral-700); margin-bottom: 8px;">Current Appointment:</div>
-                    <div style="font-size: 18px; font-weight: 700; color: var(--neutral-900);" id="reschedulePatient"></div>
-                    <div style="font-size: 14px; color: var(--neutral-600); margin-top: 4px;" id="rescheduleCurrentTime"></div>
+    <!-- REGISTER PAGE -->
+    <div id="register" class="page-container">
+        <div class="content-wrapper">
+            <div class="form-container">
+                <div class="form-header">
+                    <h2>Create Your Account</h2>
+                    <p>Join thousands of patients managing their diabetes effectively</p>
                 </div>
-                
-                <form onsubmit="submitReschedule(event)">
-                    <div class="form-group">
-                        <label class="form-label">Select New Date *</label>
-                        <input type="date" class="form-input" id="rescheduleDate" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Select New Time *</label>
-                        <select class="form-select" id="rescheduleTime" required>
-                            <option value="">Choose time slot</option>
-                            <option>08:00 AM</option>
-                            <option>09:00 AM</option>
-                            <option>10:00 AM</option>
-                            <option>11:00 AM</option>
-                            <option>02:00 PM</option>
-                            <option>03:00 PM</option>
-                            <option>04:00 PM</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Reason for Rescheduling (Optional)</label>
-                        <textarea class="form-textarea" placeholder="Please provide a reason for rescheduling..." id="rescheduleReason"></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-primary" style="width: 100%;">
-                        ✅ Confirm Reschedule
-                    </button>
-                </form>
+                <div class="form-body">
+                    <form onsubmit="handleRegister(event)">
+                        <div class="form-group">
+                            <label class="form-label">Full Name *</label>
+                            <input type="text" class="form-input" id="regName" placeholder="Enter your full name" required>
+                        </div>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label class="form-label">Age *</label>
+                                <input type="number" class="form-input" id="regAge" placeholder="Age" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Gender *</label>
+                                <select class="form-select" id="regGender" required>
+                                    <option value="">Select Gender</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Phone Number *</label>
+                            <input type="tel" class="form-input" id="regPhone" placeholder="+234 800 000 0000" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Email Address (Optional)</label>
+                            <input type="email" class="form-input" id="regEmail" placeholder="your@email.com">
+                        </div>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label class="form-label">Username *</label>
+                                <input type="text" class="form-input" id="regUsername" placeholder="Choose username" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Password *</label>
+                                <input type="password" class="form-input" id="regPassword" placeholder="Create password" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">
+                            Create Account
+                        </button>
+                        <p style="text-align: center; margin-top: 20px; color: var(--neutral-600);">
+                            Already have an account? <a href="#" onclick="showPage('login'); return false;" style="color: var(--primary); font-weight: 600;">Sign In</a>
+                        </p>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- AVAILABILITY MODAL -->
-    <div id="availabilityModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 class="modal-title">⚙️ Availability Settings</h2>
-                <button class="modal-close" onclick="closeModal('availabilityModal')">×</button>
-            </div>
-            <div class="modal-body">
-                <form onsubmit="saveAvailability(event)">
-                    <div class="form-group">
-                        <label class="form-label">Select Available Days *</label>
-                        <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 12px;">
-                            <label style="display: flex; align-items: center; gap: 8px;">
-                                <input type="checkbox" value="Monday" checked>
-                                <span>Monday</span>
-                            </label>
-                            <label style="display: flex; align-items: center; gap: 8px;">
-                                <input type="checkbox" value="Tuesday">
-                                <span>Tuesday</span>
-                            </label>
-                            <label style="display: flex; align-items: center; gap: 8px;">
-                                <input type="checkbox" value="Wednesday" checked>
-                                <span>Wednesday</span>
-                            </label>
-                            <label style="display: flex; align-items: center; gap: 8px;">
-                                <input type="checkbox" value="Thursday">
-                                <span>Thursday</span>
-                            </label>
-                            <label style="display: flex; align-items: center; gap: 8px;">
-                                <input type="checkbox" value="Friday" checked>
-                                <span>Friday</span>
-                            </label>
+    <!-- LOGIN PAGE -->
+    <div id="login" class="page-container">
+        <div class="content-wrapper">
+            <div class="form-container">
+                <div class="form-header">
+                    <h2>Welcome Back</h2>
+                    <p>Sign in to access your healthcare portal</p>
+                </div>
+                <div class="form-body">
+                    <form onsubmit="handleLogin(event)">
+                        <div class="form-group">
+                            <label class="form-label">Username</label>
+                            <input type="text" class="form-input" id="loginUsername" placeholder="Enter your username" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Password</label>
+                            <input type="password" class="form-input" id="loginPassword" placeholder="Enter your password" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">
+                            Sign In
+                        </button>
+                    </form>
+                    <div class="alert alert-info" style="margin-top: 28px;">
+                        <div>
+                            <strong>Demo Login Credentials:</strong><br>
+                            <strong>Doctor:</strong> doctor / doctor123<br>
+                            <strong>Patients:</strong> shamsuddeen, fatima, jeneth / pass123
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-primary" style="width: 100%;">
-                        Save Availability
-                    </button>
-                </form>
+                    <p style="text-align: center; margin-top: 20px; color: var(--neutral-600);">
+                        Don't have an account? <a href="#" onclick="showPage('register'); return false;" style="color: var(--primary); font-weight: 600;">Register</a>
+                    </p>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- BOOK APPOINTMENT MODAL -->
-    <div id="bookAppointmentModal" class="modal">
+    <!-- PATIENT DASHBOARD -->
+    <div id="patient-dashboard" class="page-container">
+        <div class="content-wrapper">
+            <h1 style="font-size: 36px; font-weight: 900; margin-bottom: 12px;">Welcome, <span id="patientName">Patient</span>! 👋</h1>
+            <p style="font-size: 18px; color: var(--neutral-600); margin-bottom: 48px;">Manage your appointments and health records</p>
+
+            <div class="card-grid" style="margin-bottom: 48px;">
+                <div class="card" onclick="openModal('bookingModal')">
+                    <span class="card-icon">📅</span>
+                    <h3>Book Appointment</h3>
+                    <p>Schedule a new consultation with Dr. Ahmad Ismail</p>
+                </div>
+                <div class="card" onclick="openModal('uploadTestModal')">
+                    <span class="card-icon">📤</span>
+                    <h3>Upload Test Results</h3>
+                    <p>Submit your laboratory test results</p>
+                </div>
+                <div class="card" onclick="openModal('paymentHistoryModal')">
+                    <span class="card-icon">💳</span>
+                    <h3>Payment History</h3>
+                    <p>View your transaction records and credits</p>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <div class="table-header">
+                    <h3>My Appointments</h3>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Date & Time</th>
+                            <th>Doctor</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="patientAppointmentsTable">
+                        <tr>
+                            <td colspan="4" style="text-align: center; padding: 60px; color: var(--neutral-500);">
+                                No appointments yet. Book your first consultation!
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- DOCTOR DASHBOARD -->
+    <div id="doctor-dashboard" class="page-container">
+        <div class="content-wrapper">
+            <h1 style="font-size: 36px; font-weight: 900; margin-bottom: 12px;">Doctor Dashboard 👨‍⚕️</h1>
+            <p style="font-size: 18px; color: var(--neutral-600); margin-bottom: 48px;">Welcome, Dr. Ahmad Ismail</p>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" id="todayAppts">0</div>
+                    <div class="stat-label">Today's Appointments</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="pendingAppts">0</div>
+                    <div class="stat-label">Pending Requests</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">3</div>
+                    <div class="stat-label">Total Patients</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">₦450K</div>
+                    <div class="stat-label">This Month Revenue</div>
+                </div>
+            </div>
+
+            <div class="card-grid" style="margin-bottom: 48px;">
+                <div class="card" onclick="openModal('availabilityModal')">
+                    <span class="card-icon">⏰</span>
+                    <h3>Set Availability</h3>
+                    <p>Configure your consultation schedule</p>
+                </div>
+                <div class="card" onclick="openModal('createPatientModal')">
+                    <span class="card-icon">👤</span>
+                    <h3>Create Patient Account</h3>
+                    <p>Register a new patient in the system</p>
+                </div>
+                <div class="card" onclick="openModal('prescriptionModal')">
+                    <span class="card-icon">💊</span>
+                    <h3>Write Prescription</h3>
+                    <p>Create e-prescription for patients</p>
+                </div>
+                <div class="card" onclick="openModal('labTestModal')">
+                    <span class="card-icon">🔬</span>
+                    <h3>Request Lab Tests</h3>
+                    <p>Order laboratory tests for patients</p>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <div class="table-header">
+                    <h3>Appointment Requests</h3>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Patient</th>
+                            <th>Date & Time</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="doctorAppointmentsTable">
+                        <tr>
+                            <td colspan="4" style="text-align: center; padding: 60px; color: var(--neutral-500);">
+                                No appointment requests yet
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- BOOKING MODAL -->
+    <div id="bookingModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title">📅 Book Appointment</h2>
-                <button class="modal-close" onclick="closeModal('bookAppointmentModal')">×</button>
+                <h2 class="modal-title">Book Appointment</h2>
+                <button class="modal-close" onclick="closeModal('bookingModal')">×</button>
             </div>
             <div class="modal-body">
-                <form onsubmit="bookAppointment(event)">
+                <form onsubmit="handleBooking(event)">
                     <div class="form-group">
-                        <label class="form-label">Select Doctor *</label>
-                        <select class="form-select" required>
-                            <option value="">Choose doctor</option>
-                            <option selected>Dr. Ahmad Ismail - Endocrinologist</option>
-                            <option>Dr. Sarah Ahmed - Diabetologist</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Appointment Date *</label>
-                        <input type="date" class="form-input" required>
+                        <label class="form-label">Preferred Date *</label>
+                        <input type="date" class="form-input" id="apptDate" required>
                     </div>
                     <div class="form-group">
                         <label class="form-label">Preferred Time *</label>
-                        <select class="form-select" required>
-                            <option value="">Select time</option>
-                            <option>09:00 AM</option>
+                        <select class="form-select" id="apptTime" required>
+                            <option value="">Select Time</option>
+                            <option>9:00 AM</option>
+                            <option>10:00 AM</option>
                             <option>11:00 AM</option>
-                            <option>02:00 PM</option>
+                            <option>12:00 PM</option>
+                            <option>2:00 PM</option>
+                            <option>3:00 PM</option>
+                            <option>4:00 PM</option>
                         </select>
                     </div>
                     <div class="form-group">
                         <label class="form-label">Reason for Visit *</label>
-                        <textarea class="form-textarea" placeholder="Describe your symptoms or reason..." required></textarea>
+                        <textarea class="form-textarea" id="apptReason" placeholder="Describe your concerns..." required></textarea>
+                    </div>
+                    <div class="payment-summary">
+                        <div class="payment-row">
+                            <span>Consultation Fee</span>
+                            <span>₦15,000</span>
+                        </div>
+                        <div class="payment-row total">
+                            <span>Total Amount</span>
+                            <span>₦15,000</span>
+                        </div>
                     </div>
                     <button type="submit" class="btn btn-primary" style="width: 100%;">
-                        Book Appointment
+                        💳 Proceed to Payment
                     </button>
                 </form>
             </div>
         </div>
     </div>
 
-    <!-- UPLOAD TEST MODAL -->
+    <!-- PAYMENT MODAL (MOCK) -->
+    <div id="paymentModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">💳 Payment Details</h2>
+                <button class="modal-close" onclick="closeModal('paymentModal')">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-info">
+                    <div>
+                        <strong>🔒 Secure Payment Gateway</strong><br>
+                        This is a demo payment screen. In production, this integrates with Paystack.
+                    </div>
+                </div>
+                <div class="payment-summary">
+                    <div class="payment-row">
+                        <span>Patient Name</span>
+                        <span id="paymentName">-</span>
+                    </div>
+                    <div class="payment-row">
+                        <span>Email</span>
+                        <span id="paymentEmail">-</span>
+                    </div>
+                    <div class="payment-row">
+                        <span>Phone</span>
+                        <span id="paymentPhone">-</span>
+                    </div>
+                    <div class="payment-row total">
+                        <span>Amount to Pay</span>
+                        <span>₦15,000</span>
+                    </div>
+                </div>
+                <button class="btn btn-primary" style="width: 100%; margin-bottom: 12px;" onclick="processPayment()">
+                    ✅ Confirm & Pay ₦15,000
+                </button>
+                <button class="btn btn-secondary" style="width: 100%;" onclick="closeModal('paymentModal')">
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Other modals continue in next message... -->
+
+    <script>
+        // Global State
+        let currentUser = null;
+        let currentUserType = null;
+        let appointments = [];
+        let patients = [
+            { username: 'shamsuddeen', name: 'Shamsuddeen Usman', password: 'pass123', email: 'shamsuddeen@email.com', phone: '+234 800 111 1111', age: 45, gender: 'Male', prescriptions: [], labTests: [] },
+            { username: 'fatima', name: 'Fatima Ismail', password: 'pass123', email: 'fatima@email.com', phone: '+234 800 222 2222', age: 38, gender: 'Female', prescriptions: [], labTests: [] },
+            { username: 'jeneth', name: 'Jeneth Danjummai', password: 'pass123', email: 'jeneth@email.com', phone: '+234 800 333 3333', age: 52, gender: 'Female', prescriptions: [], labTests: [] }
+        ];
+        let patientNotifications = [];
+        let doctorNotifications = [];
+        let availableDays = ['Monday', 'Friday', 'Saturday'];
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            const today = new Date().toISOString().split('T')[0];
+            const dateInput = document.getElementById('apptDate');
+            if (dateInput) dateInput.min = today;
+        });
+
+        // Mobile Menu Functions
+        function toggleMobileMenu(type) {
+            const menuId = `${type}MobileMenu`;
+            const menu = document.getElementById(menuId);
+            
+            // Close all other mobile menus
+            closeMobileMenus();
+            
+            // Toggle current menu
+            if (menu) {
+                menu.classList.toggle('hidden');
+                menu.classList.toggle('active');
+            }
+        }
+
+        function closeMobileMenus() {
+            const menus = ['publicMobileMenu', 'patientMobileMenu', 'doctorMobileMenu'];
+            menus.forEach(menuId => {
+                const menu = document.getElementById(menuId);
+                if (menu) {
+                    menu.classList.add('hidden');
+                    menu.classList.remove('active');
+                }
+            });
+        }
+
+        // Page Navigation
+        function showPage(pageId) {
+            document.querySelectorAll('.page-container').forEach(p => p.classList.remove('active'));
+            document.getElementById(pageId)?.classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Modal Functions
+        function openModal(modalId) {
+            document.getElementById(modalId)?.classList.add('active');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId)?.classList.remove('active');
+        }
+
+        // Notification Functions
+        function toggleNotifications(type) {
+            const panel = document.getElementById(`${type}NotificationPanel`);
+            const isOpen = panel.classList.contains('open');
+            
+            // Close both panels
+            document.getElementById('patientNotificationPanel').classList.remove('open');
+            document.getElementById('doctorNotificationPanel').classList.remove('open');
+            
+            if (!isOpen) {
+                panel.classList.add('open');
+                updateNotificationDisplay(type);
+            }
+        }
+
+        function addNotification(type, message) {
+            const notifications = type === 'patient' ? patientNotifications : doctorNotifications;
+            notifications.unshift({
+                id: Date.now(),
+                message,
+                time: new Date().toLocaleTimeString(),
+                read: false
+            });
+            updateNotificationBadge(type);
+        }
+
+        function updateNotificationBadge(type) {
+            const notifications = type === 'patient' ? patientNotifications : doctorNotifications;
+            const unread = notifications.filter(n => !n.read).length;
+            document.getElementById(`${type}Badge`).textContent = unread;
+        }
+
+        function updateNotificationDisplay(type) {
+            const notifications = type === 'patient' ? patientNotifications : doctorNotifications;
+            const list = document.getElementById(`${type}NotificationList`);
+            
+            if (notifications.length === 0) {
+                list.innerHTML = '<div style="padding: 60px 20px; text-align: center; color: var(--neutral-500);">No notifications yet</div>';
+                return;
+            }
+            
+            list.innerHTML = notifications.map(n => `
+                <div class="notification-item ${n.read ? '' : 'unread'}" onclick="markAsRead('${type}', ${n.id})">
+                    <div style="font-weight: 600; margin-bottom: 4px;">${n.message}</div>
+                    <div style="font-size: 13px; color: var(--neutral-600);">${n.time}</div>
+                </div>
+            `).join('');
+        }
+
+        function markAsRead(type, id) {
+            const notifications = type === 'patient' ? patientNotifications : doctorNotifications;
+            const notif = notifications.find(n => n.id === id);
+            if (notif) notif.read = true;
+            updateNotificationBadge(type);
+            updateNotificationDisplay(type);
+        }
+
+        function clearNotifications(type) {
+            if (!confirm('Clear all notifications?')) return;
+            if (type === 'patient') patientNotifications = [];
+            else doctorNotifications = [];
+            updateNotificationBadge(type);
+            updateNotificationDisplay(type);
+        }
+
+        // Authentication
+        function handleRegister(event) {
+            event.preventDefault();
+            const name = document.getElementById('regName').value.trim();
+            const username = document.getElementById('regUsername').value.trim().toLowerCase();
+            
+            if (patients.some(p => p.username === username)) {
+                alert('❌ Username already taken!');
+                return;
+            }
+            
+            patients.push({
+                username,
+                name,
+                password: document.getElementById('regPassword').value,
+                email: document.getElementById('regEmail').value.trim(),
+                phone: document.getElementById('regPhone').value.trim(),
+                age: document.getElementById('regAge').value,
+                gender: document.getElementById('regGender').value,
+                prescriptions: [],
+                labTests: []
+            });
+            
+            alert('✅ Account created successfully!\n\nYou can now login.');
+            showPage('login');
+        }
+
+        function handleLogin(event) {
+            event.preventDefault();
+            const username = document.getElementById('loginUsername').value.trim().toLowerCase();
+            const password = document.getElementById('loginPassword').value;
+            
+            // Doctor login
+            if (username === 'doctor' && password === 'doctor123') {
+                currentUser = 'Dr. Ahmad Ismail';
+                currentUserType = 'doctor';
+                document.getElementById('publicNav').classList.add('hidden');
+                document.getElementById('doctorNav').classList.remove('hidden');
+                showPage('doctor-dashboard');
+                updateDoctorDashboard();
+                return;
+            }
+            
+            // Patient login
+            const patient = patients.find(p => p.username === username && p.password === password);
+            if (patient) {
+                currentUser = patient.name;
+                currentUserType = 'patient';
+                document.getElementById('publicNav').classList.add('hidden');
+                document.getElementById('patientNav').classList.remove('hidden');
+                document.getElementById('availabilityBanner').classList.remove('hidden');
+                document.getElementById('patientName').textContent = patient.name;
+                showPage('patient-dashboard');
+                updatePatientDashboard();
+                return;
+            }
+            
+            alert('❌ Invalid credentials! Check demo logins.');
+        }
+
+        function logout() {
+            if (!confirm('Are you sure you want to logout?')) return;
+            
+            currentUser = null;
+            currentUserType = null;
+            document.getElementById('publicNav').classList.remove('hidden');
+            document.getElementById('patientNav').classList.add('hidden');
+            document.getElementById('doctorNav').classList.add('hidden');
+            document.getElementById('availabilityBanner').classList.add('hidden');
+            showPage('home');
+        }
+
+        // Booking
+        function handleBooking(event) {
+            event.preventDefault();
+            
+            const patient = patients.find(p => p.name === currentUser);
+            if (!patient) return;
+            
+            // Pre-fill payment details
+            document.getElementById('paymentName').textContent = patient.name;
+            document.getElementById('paymentEmail').textContent = patient.email || 'info@theclinic.org.ng';
+            document.getElementById('paymentPhone').textContent = patient.phone;
+            
+            closeModal('bookingModal');
+            openModal('paymentModal');
+        }
+
+        function processPayment() {
+            const date = document.getElementById('apptDate').value;
+            const time = document.getElementById('apptTime').value;
+            const reason = document.getElementById('apptReason').value;
+            
+            const appointment = {
+                id: Date.now(),
+                patient: currentUser,
+                date,
+                time,
+                reason,
+                status: 'Pending',
+                amount: 15000
+            };
+            
+            appointments.push(appointment);
+            
+            addNotification('patient', `✅ Appointment booked for ${date} at ${time}`);
+            addNotification('doctor', `📅 New appointment request from ${currentUser}`);
+            
+            closeModal('paymentModal');
+            
+            alert(`✅ Payment Successful!\n\nTransaction ID: TXN-${Date.now()}\nAmount: ₦15,000\n\nYour appointment has been confirmed.`);
+            
+            updatePatientDashboard();
+            document.getElementById('apptDate').value = '';
+            document.getElementById('apptTime').value = '';
+            document.getElementById('apptReason').value = '';
+        }
+
+        // Update Dashboards
+        function updatePatientDashboard() {
+            const tbody = document.getElementById('patientAppointmentsTable');
+            const userAppts = appointments.filter(a => a.patient === currentUser);
+            
+            if (userAppts.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; padding: 60px; color: var(--neutral-500);">No appointments yet. Book your first consultation!</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = userAppts.map(a => {
+                let badge, actions;
+                
+                if (a.status === 'Pending') {
+                    badge = '<span class="badge badge-warning">Pending</span>';
+                    actions = `
+                        <button class="nav-btn" style="padding: 8px 16px; font-size: 13px; margin-right: 8px;" onclick="rescheduleAppointment(${a.id})">Reschedule</button>
+                        <button class="nav-btn danger" style="padding: 8px 16px; font-size: 13px;" onclick="cancelAppointment(${a.id})">Cancel</button>
+                    `;
+                } else if (a.status === 'Confirmed') {
+                    badge = '<span class="badge badge-success">Confirmed</span>';
+                    actions = `<button class="btn btn-primary" style="padding: 8px 16px; font-size: 13px;" onclick="joinCall()">📹 Join Call</button>`;
+                } else if (a.status === 'Completed') {
+                    badge = '<span class="badge badge-info">Completed</span>';
+                    actions = '—';
+                } else {
+                    badge = '<span class="badge badge-danger">Cancelled</span>';
+                    actions = 'Credited';
+                }
+                
+                return `
+                    <tr>
+                        <td>${a.date} • ${a.time}</td>
+                        <td>Dr. Ahmad Ismail</td>
+                        <td>${badge}</td>
+                        <td>${actions}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function updateDoctorDashboard() {
+            const tbody = document.getElementById('doctorAppointmentsTable');
+            
+            if (appointments.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; padding: 60px; color: var(--neutral-500);">No appointment requests yet</td></tr>';
+            } else {
+                tbody.innerHTML = appointments.map(a => {
+                    let badge, actions;
+                    
+                    if (a.status === 'Pending') {
+                        badge = '<span class="badge badge-warning">Pending</span>';
+                        actions = `
+                            <button class="btn btn-primary" style="padding: 8px 16px; font-size: 13px; margin-right: 8px;" onclick="confirmAppointment(${a.id})">Confirm</button>
+                            <button class="nav-btn danger" style="padding: 8px 16px; font-size: 13px;" onclick="rejectAppointment(${a.id})">Reject</button>
+                        `;
+                    } else if (a.status === 'Confirmed') {
+                        badge = '<span class="badge badge-success">Confirmed</span>';
+                        actions = `<button class="btn btn-primary" style="padding: 8px 16px; font-size: 13px;" onclick="startCall(${a.id})">📹 Start Call</button>`;
+                    } else if (a.status === 'Completed') {
+                        badge = '<span class="badge badge-info">Completed</span>';
+                        actions = '—';
+                    } else {
+                        badge = '<span class="badge badge-danger">Rejected</span>';
+                        actions = '—';
+                    }
+                    
+                    return `
+                        <tr>
+                            <td>${a.patient}</td>
+                            <td>${a.date} • ${a.time}</td>
+                            <td>${badge}</td>
+                            <td>${actions}</td>
+                        </tr>
+                    `;
+                }).join('');
+            }
+            
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('todayAppts').textContent = appointments.filter(a => a.date === today).length;
+            document.getElementById('pendingAppts').textContent = appointments.filter(a => a.status === 'Pending').length;
+        }
+
+        // Doctor Actions
+        function confirmAppointment(id) {
+            const appt = appointments.find(a => a.id === id);
+            if (appt) {
+                appt.status = 'Confirmed';
+                addNotification('patient', `✅ Your appointment on ${appt.date} has been confirmed!`);
+                addNotification('doctor', `Confirmed appointment for ${appt.patient}`);
+                updateDoctorDashboard();
+            }
+        }
+
+        function rejectAppointment(id) {
+            if (!confirm('Reject this appointment?')) return;
+            const appt = appointments.find(a => a.id === id);
+            if (appt) {
+                appt.status = 'Rejected';
+                addNotification('patient', `❌ Appointment on ${appt.date} was not confirmed`);
+                addNotification('doctor', `Rejected appointment for ${appt.patient}`);
+                updateDoctorDashboard();
+            }
+        }
+
+        function startCall(id) {
+            alert('📹 Starting video consultation...\n\n[In production: WebRTC/Twilio video call integration]');
+            const appt = appointments.find(a => a.id === id);
+            if (appt) {
+                appt.status = 'Completed';
+                addNotification('patient', `✅ Consultation completed`);
+                addNotification('doctor', `Completed consultation with ${appt.patient}`);
+                updateDoctorDashboard();
+            }
+        }
+
+        // Patient Actions
+        function cancelAppointment(id) {
+            if (!confirm('Cancel this appointment? Fee will be credited to your account.')) return;
+            const appt = appointments.find(a => a.id === id);
+            if (appt) {
+                appt.status = 'Cancelled';
+                addNotification('patient', `Appointment cancelled. ₦15,000 credited to your account.`);
+                addNotification('doctor', `${appt.patient} cancelled appointment`);
+                updatePatientDashboard();
+            }
+        }
+
+        function rescheduleAppointment(id) {
+            alert('🔄 Reschedule feature\n\nYour ₦15,000 payment will be applied to the new slot.');
+        }
+
+        function joinCall() {
+            alert('📹 Joining video call...\n\n[WebRTC/Twilio integration in production]');
+        }
+
+        // Close notification panels when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.notification-panel') && !e.target.closest('.notification-btn')) {
+                document.getElementById('patientNotificationPanel').classList.remove('open');
+                document.getElementById('doctorNotificationPanel').classList.remove('open');
+            }
+            
+            // Close mobile menus when clicking outside
+            if (!e.target.closest('.mobile-menu') && !e.target.closest('.mobile-menu-btn')) {
+                closeMobileMenus();
+            }
+        });
+    </script>
+</body>
+</html>
+    <!-- UPLOAD TEST RESULTS MODAL -->
     <div id="uploadTestModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -1105,11 +1745,16 @@
                 <button class="modal-close" onclick="closeModal('uploadTestModal')">×</button>
             </div>
             <div class="modal-body">
+                <div class="alert alert-info">
+                    <div>
+                        <strong>Requested Tests:</strong> HbA1c, Fasting Blood Sugar, Lipid Profile
+                    </div>
+                </div>
                 <form onsubmit="uploadTest(event)">
                     <div class="form-group">
-                        <label class="form-label">Test Type *</label>
+                        <label class="form-label">Select Test *</label>
                         <select class="form-select" required>
-                            <option value="">Select test type</option>
+                            <option value="">Choose test</option>
                             <option>HbA1c</option>
                             <option>Fasting Blood Sugar</option>
                             <option>Lipid Profile</option>
@@ -1117,15 +1762,97 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Upload File *</label>
-                        <input type="file" class="form-input" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Additional Notes</label>
-                        <textarea class="form-textarea" placeholder="Any additional information..."></textarea>
+                        <label class="form-label">Upload Result (PDF/Image) *</label>
+                        <input type="file" class="form-input" accept=".pdf,.jpg,.png" required>
                     </div>
                     <button type="submit" class="btn btn-primary" style="width: 100%;">
-                        Upload Results
+                        Upload Result
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAYMENT HISTORY MODAL -->
+    <div id="paymentHistoryModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">💳 Payment History</h2>
+                <button class="modal-close" onclick="closeModal('paymentHistoryModal')">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="table-container" style="margin-bottom: 24px;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Description</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="paymentHistoryTable">
+                            <tr>
+                                <td colspan="4" style="text-align: center; padding: 40px;">
+                                    No payment history yet
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="alert alert-success">
+                    <div>
+                        <strong>Available Credit:</strong> ₦0
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- AVAILABILITY SETTINGS MODAL -->
+    <div id="availabilityModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">⏰ Set Availability</h2>
+                <button class="modal-close" onclick="closeModal('availabilityModal')">×</button>
+            </div>
+            <div class="modal-body">
+                <form onsubmit="saveAvailability(event)">
+                    <div class="form-group">
+                        <label class="form-label">Select Available Days</label>
+                        <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 12px;">
+                            <label style="display: flex; align-items: center; gap: 10px; padding: 12px; border: 2px solid var(--neutral-300); border-radius: 10px; cursor: pointer; transition: all 0.2s;">
+                                <input type="checkbox" value="Monday" checked>
+                                <span style="font-weight: 600;">Monday</span>
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 10px; padding: 12px; border: 2px solid var(--neutral-300); border-radius: 10px; cursor: pointer;">
+                                <input type="checkbox" value="Tuesday">
+                                <span style="font-weight: 600;">Tuesday</span>
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 10px; padding: 12px; border: 2px solid var(--neutral-300); border-radius: 10px; cursor: pointer;">
+                                <input type="checkbox" value="Wednesday">
+                                <span style="font-weight: 600;">Wednesday</span>
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 10px; padding: 12px; border: 2px solid var(--neutral-300); border-radius: 10px; cursor: pointer;">
+                                <input type="checkbox" value="Thursday">
+                                <span style="font-weight: 600;">Thursday</span>
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 10px; padding: 12px; border: 2px solid var(--neutral-300); border-radius: 10px; cursor: pointer;">
+                                <input type="checkbox" value="Friday" checked>
+                                <span style="font-weight: 600;">Friday</span>
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 10px; padding: 12px; border: 2px solid var(--neutral-300); border-radius: 10px; cursor: pointer;">
+                                <input type="checkbox" value="Saturday" checked>
+                                <span style="font-weight: 600;">Saturday</span>
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 10px; padding: 12px; border: 2px solid var(--neutral-300); border-radius: 10px; cursor: pointer;">
+                                <input type="checkbox" value="Sunday">
+                                <span style="font-weight: 600;">Sunday</span>
+                            </label>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 24px;">
+                        Save Availability
                     </button>
                 </form>
             </div>
@@ -1136,7 +1863,7 @@
     <div id="createPatientModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title">➕ Create New Patient</h2>
+                <h2 class="modal-title">👤 Create Patient Account</h2>
                 <button class="modal-close" onclick="closeModal('createPatientModal')">×</button>
             </div>
             <div class="modal-body">
@@ -1279,220 +2006,7 @@
     </div>
 
     <script>
-        // Global Variables
-        let currentView = 'doctor';
-        let currentUser = 'Shamsuddeen Usman';
-        let availableDays = ['Monday', 'Wednesday', 'Friday'];
-        let notifications = [];
-
-        // Initialize notifications with some sample data
-        function initializeNotifications() {
-            addNotification('doctor', 'New appointment request from Fatima Ismail');
-            addNotification('doctor', 'Lab results uploaded by Shamsuddeen Usman');
-            addNotification('patient', 'Your appointment is confirmed for tomorrow at 09:00 AM');
-        }
-
-        // Toggle Mobile Menu
-        function toggleMobileMenu() {
-            const navMenu = document.getElementById('navMenu');
-            navMenu.classList.toggle('active');
-        }
-
-        // Toggle Notifications Dropdown
-        function toggleNotifications() {
-            const dropdown = document.getElementById('notificationDropdown');
-            dropdown.classList.toggle('show');
-        }
-
-        // Close notification dropdown when clicking outside
-        document.addEventListener('click', function(event) {
-            const dropdown = document.getElementById('notificationDropdown');
-            const notificationBtn = event.target.closest('.notification-btn');
-            
-            if (!notificationBtn && !event.target.closest('.notification-dropdown')) {
-                dropdown.classList.remove('show');
-            }
-        });
-
-        // Add Notification
-        function addNotification(type, message) {
-            const notification = {
-                id: Date.now(),
-                type: type,
-                message: message,
-                time: new Date(),
-                unread: true
-            };
-            
-            notifications.unshift(notification);
-            updateNotificationUI();
-        }
-
-        // Update Notification UI
-        function updateNotificationUI() {
-            const notificationList = document.getElementById('notificationList');
-            const notificationCount = document.getElementById('notificationCount');
-            
-            const unreadCount = notifications.filter(n => n.unread).length;
-            notificationCount.textContent = unreadCount;
-            notificationCount.style.display = unreadCount > 0 ? 'flex' : 'none';
-            
-            if (notifications.length === 0) {
-                notificationList.innerHTML = `
-                    <div class="notification-item" style="text-align: center; padding: 40px 20px; color: var(--neutral-500);">
-                        No notifications yet
-                    </div>
-                `;
-                return;
-            }
-            
-            notificationList.innerHTML = notifications.map(notification => {
-                const timeAgo = getTimeAgo(notification.time);
-                return `
-                    <div class="notification-item ${notification.unread ? 'unread' : ''}" data-id="${notification.id}">
-                        <div class="notification-content">
-                            <div class="notification-text">${notification.message}</div>
-                            <div class="notification-time">${timeAgo}</div>
-                        </div>
-                        <div class="notification-actions">
-                            <button class="notification-clear-btn" onclick="clearNotification(${notification.id})">Clear</button>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        // Get Time Ago
-        function getTimeAgo(date) {
-            const seconds = Math.floor((new Date() - date) / 1000);
-            
-            if (seconds < 60) return 'Just now';
-            if (seconds < 3600) return Math.floor(seconds / 60) + ' min ago';
-            if (seconds < 86400) return Math.floor(seconds / 3600) + ' hours ago';
-            return Math.floor(seconds / 86400) + ' days ago';
-        }
-
-        // Clear Single Notification
-        function clearNotification(id) {
-            notifications = notifications.filter(n => n.id !== id);
-            updateNotificationUI();
-        }
-
-        // Clear All Notifications
-        function clearAllNotifications() {
-            if (notifications.length === 0) return;
-            
-            if (confirm('Are you sure you want to clear all notifications?')) {
-                notifications = [];
-                updateNotificationUI();
-            }
-        }
-
-        // Open Reschedule Modal
-        function openRescheduleModal(patientName, currentTime) {
-            document.getElementById('reschedulePatient').textContent = patientName;
-            document.getElementById('rescheduleCurrentTime').textContent = 'Current: ' + currentTime;
-            
-            // Set minimum date to today
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('rescheduleDate').setAttribute('min', today);
-            
-            openModal('rescheduleModal');
-        }
-
-        // Submit Reschedule
-        function submitReschedule(event) {
-            event.preventDefault();
-            
-            const patient = document.getElementById('reschedulePatient').textContent;
-            const newDate = document.getElementById('rescheduleDate').value;
-            const newTime = document.getElementById('rescheduleTime').value;
-            const reason = document.getElementById('rescheduleReason').value;
-            
-            const formattedDate = new Date(newDate).toLocaleDateString('en-US', { 
-                weekday: 'long', 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric' 
-            });
-            
-            alert(`✅ Appointment Rescheduled Successfully!\n\nPatient: ${patient}\nNew Date: ${formattedDate}\nNew Time: ${newTime}${reason ? '\nReason: ' + reason : ''}\n\nNotification sent to patient.`);
-            
-            addNotification('doctor', `Appointment rescheduled for ${patient}`);
-            addNotification('patient', `Your appointment has been rescheduled to ${formattedDate} at ${newTime}`);
-            
-            closeModal('rescheduleModal');
-            event.target.reset();
-        }
-
-        // Switch View
-        function switchView(view) {
-            currentView = view;
-            document.getElementById('doctorView').style.display = view === 'doctor' ? 'block' : 'none';
-            document.getElementById('patientView').style.display = view === 'patient' ? 'block' : 'none';
-            document.getElementById('availabilityBanner').style.display = view === 'doctor' ? 'block' : 'none';
-            
-            // Close mobile menu when switching views
-            document.getElementById('navMenu').classList.remove('active');
-        }
-
-        // Modal Functions
-        function openModal(modalId) {
-            document.getElementById(modalId).classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeModal(modalId) {
-            document.getElementById(modalId).classList.remove('active');
-            document.body.style.overflow = 'auto';
-        }
-
-        // Close modal when clicking outside
-        document.addEventListener('click', function(event) {
-            if (event.target.classList.contains('modal')) {
-                event.target.classList.remove('active');
-                document.body.style.overflow = 'auto';
-            }
-        });
-
-        // Consultation Functions
-        function startConsultation(patient) {
-            alert(`🎥 Starting video consultation with ${patient}...\n\nConnecting to video platform...`);
-            addNotification('doctor', `Started consultation with ${patient}`);
-            addNotification('patient', 'Dr. Ahmad Ismail has joined the consultation');
-        }
-
-        function viewPatientRecord(patient) {
-            alert(`📄 Opening medical record for ${patient}...\n\nLoading patient history, prescriptions, and test results.`);
-        }
-
-        function joinConsultation() {
-            alert('🎥 Joining video consultation...\n\nPlease ensure your camera and microphone are enabled.');
-            addNotification('patient', 'Joined consultation with Dr. Ahmad Ismail');
-        }
-
-        function cancelAppointment() {
-            if (confirm('Are you sure you want to cancel this appointment?')) {
-                alert('❌ Appointment cancelled successfully.\n\nDr. Ahmad Ismail has been notified.');
-                addNotification('patient', 'Appointment cancelled');
-                addNotification('doctor', `${currentUser} cancelled their appointment`);
-            }
-        }
-
-        function viewPrescriptions() {
-            alert('💊 Loading your active prescriptions...\n\n1. Metformin 500mg - Twice daily\n2. Glimepiride 2mg - Once daily\n3. Atorvastatin 10mg - Once daily');
-        }
-
-        // Form Handlers
-        function bookAppointment(event) {
-            event.preventDefault();
-            alert('✅ Appointment booked successfully!\n\nYou will receive a confirmation email shortly.');
-            addNotification('patient', 'Appointment booking confirmed');
-            addNotification('doctor', `New appointment request from ${currentUser}`);
-            closeModal('bookAppointmentModal');
-            event.target.reset();
-        }
-
+        // Additional Functions
         function uploadTest(event) {
             event.preventDefault();
             alert('✅ Test result uploaded successfully!\n\nDr. Ahmad Ismail has been notified.');
@@ -1546,18 +2060,6 @@
             closeModal('labTestModal');
             event.target.reset();
         }
-
-        function logout() {
-            if (confirm('Are you sure you want to logout?')) {
-                alert('👋 Logged out successfully!\n\nThank you for using DiabetesCare Telemedicine.');
-                location.reload();
-            }
-        }
-
-        // Initialize the app
-        document.addEventListener('DOMContentLoaded', function() {
-            initializeNotifications();
-        });
     </script>
 </body>
 </html>
