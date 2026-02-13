@@ -1,0 +1,2533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DiabetesCare Telemedicine - Professional Healthcare Platform</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0066FF',
+                        'primary-dark': '#0052CC',
+                        'primary-light': '#E6F0FF',
+                        secondary: '#00C853',
+                        'secondary-light': '#E8F5E9',
+                        accent: '#FF3D00',
+                        'accent-light': '#FFE0DB',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Custom styles that complement Tailwind */
+        .logo-img {
+            width: 56px;
+            height: 56px;
+            object-fit: contain;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        /* Modal animations */
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.2s ease;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* Notification dropdown */
+        .notification-dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 12px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            width: 380px;
+            max-width: calc(100vw - 32px);
+            max-height: 500px;
+            overflow-y: auto;
+            z-index: 10000;
+        }
+
+        .notification-dropdown.active {
+            display: block;
+            animation: slideDown 0.2s ease;
+        }
+
+        @media (max-width: 640px) {
+            .notification-dropdown {
+                position: fixed;
+                top: auto;
+                right: 16px;
+                left: 16px;
+                bottom: 16px;
+                width: auto;
+                max-height: 70vh;
+                margin-top: 0;
+            }
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-10px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* Mobile responsive navbar */
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            top: 72px;
+            left: 0;
+            right: 0;
+            background: white;
+            border-bottom: 1px solid #e5e7eb;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            z-index: 999;
+            animation: slideDown 0.2s ease;
+        }
+
+        .mobile-menu.active {
+            display: block;
+        }
+
+        /* Video consultation styles */
+        .video-container {
+            position: relative;
+            background: #000;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .video-container video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .local-video {
+            position: absolute;
+            bottom: 16px;
+            right: 16px;
+            width: 150px;
+            height: 100px;
+            border-radius: 8px;
+            border: 2px solid white;
+            z-index: 10;
+        }
+
+        /* Smooth scrolling for cards on mobile */
+        .scroll-container {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: thin;
+        }
+
+        .scroll-container::-webkit-scrollbar {
+            height: 6px;
+        }
+
+        .scroll-container::-webkit-scrollbar-thumb {
+            background: #d1d5db;
+            border-radius: 3px;
+        }
+
+        /* Hidden sections */
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    
+    <!-- Top Bar -->
+    <div class="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-2 text-center text-sm font-semibold">
+        🏥 Professional Diabetes Care Platform • Secure • HIPAA Compliant
+    </div>
+
+    <!-- Availability Banner (shown when patient logs in) -->
+    <div id="availabilityBanner" class="hidden bg-gradient-to-r from-blue-600 to-green-600 text-white py-3 text-center font-semibold overflow-hidden" style="position: relative;">
+        <div style="display: inline-block; padding-left: 100%; animation: scroll-banner 25s linear infinite; white-space: nowrap;">
+            📅 Dr. Ahmad Ismail is available for consultations: <strong id="availableDays">Monday, Friday, Saturday</strong> | Consultation Hours: 9:00 AM - 5:00 PM | 💊 Book Your Appointment Today
+        </div>
+    </div>
+
+    <style>
+        @keyframes scroll-banner {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-100%); }
+        }
+    </style>
+
+    <!-- Navigation -->
+    <nav class="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm" id="publicNav">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-18">
+                <!-- Logo -->
+                <div class="flex items-center gap-4 cursor-pointer" onclick="showLanding()">
+                    <img src="./theclinic.png" alt="DiabetesCare Logo" class="logo-img" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 200 200%27%3E%3Crect fill=%27%230066FF%27 width=%27200%27 height=%27200%27 rx=%2740%27/%3E%3Cpath fill=%27white%27 d=%27M100 40 L100 160 M40 100 L160 100%27 stroke=%27white%27 stroke-width=%2716%27 stroke-linecap=%27round%27/%3E%3Ccircle cx=%27100%27 cy=%27100%27 r=%2725%27 fill=%27%2300C853%27/%3E%3C/svg%3E'">
+                    <div class="hidden sm:flex flex-col">
+                        <span class="text-xl font-extrabold text-blue-600">DiabetesCare</span>
+                        <span class="text-xs text-gray-600 font-semibold uppercase tracking-wide">Telemedicine Portal</span>
+                    </div>
+                </div>
+
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex items-center gap-3" id="desktopMenu">
+                    <button onclick="showLanding()" class="px-6 py-2 rounded-lg font-semibold text-gray-700 hover:bg-gray-100 transition">Home</button>
+                    <button onclick="openModal('loginTypeModal')" class="px-6 py-2 rounded-lg font-semibold text-gray-700 hover:bg-gray-100 transition">Login</button>
+                    <button onclick="showRegister()" class="px-6 py-2 rounded-lg font-semibold text-white bg-blue-600 hover:bg-blue-700 transition shadow-md">Get Started</button>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <button onclick="toggleMobileMenu()" class="md:hidden p-2 rounded-lg hover:bg-gray-100" id="mobileMenuBtn">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div class="mobile-menu" id="mobileMenu">
+            <div class="px-4 py-3 space-y-2">
+                <button onclick="showLanding(); toggleMobileMenu()" class="w-full text-left px-4 py-2 rounded-lg font-semibold text-gray-700 hover:bg-gray-100">Home</button>
+                <button onclick="openModal('loginTypeModal'); toggleMobileMenu()" class="w-full text-left px-4 py-2 rounded-lg font-semibold text-gray-700 hover:bg-gray-100">Login</button>
+                <button onclick="showRegister(); toggleMobileMenu()" class="w-full text-left px-4 py-2 rounded-lg font-semibold text-white bg-blue-600 hover:bg-blue-700">Get Started</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- LOGIN TYPE SELECTOR MODAL -->
+    <div id="loginTypeModal" class="modal">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="p-6 border-b border-gray-200">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-2xl font-bold text-gray-900">Select Login Type</h2>
+                    <button onclick="closeModal('loginTypeModal')" class="text-gray-400 hover:text-gray-600 text-3xl font-bold">&times;</button>
+                </div>
+            </div>
+            <div class="p-6">
+                <div class="grid grid-cols-1 gap-4">
+                    <button onclick="showLogin('patient'); closeModal('loginTypeModal')" class="p-6 border-2 border-blue-200 rounded-xl hover:border-blue-500 hover:bg-blue-50 transition-all text-left">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                                <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-bold text-gray-900">Patient Login</h3>
+                                <p class="text-sm text-gray-600">Access your health portal</p>
+                            </div>
+                        </div>
+                    </button>
+
+                    <button onclick="showLogin('doctor'); closeModal('loginTypeModal')" class="p-6 border-2 border-green-200 rounded-xl hover:border-green-500 hover:bg-green-50 transition-all text-left">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                                <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-bold text-gray-900">Consultant Login</h3>
+                                <p class="text-sm text-gray-600">Access consultant dashboard</p>
+                            </div>
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- LANDING PAGE -->
+    <section id="landingSection" class="section active">
+        <div class="min-h-screen flex items-center justify-center px-4 py-12">
+            <div class="max-w-6xl w-full">
+                <!-- Hero Section -->
+                <div class="text-center mb-16">
+                    <h1 class="text-4xl md:text-6xl font-extrabold text-gray-900 mb-6">
+                        Welcome to <span class="text-blue-600">DiabetesCare</span>
+                    </h1>
+                    <p class="text-xl md:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto">
+                        Professional telemedicine platform connecting patients with certified diabetes specialists
+                    </p>
+                </div>
+
+                <!-- Portal Cards -->
+                <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                    <!-- Patient Portal -->
+                    <div class="bg-white rounded-2xl shadow-xl p-8 border-2 border-transparent hover:border-blue-500 transition-all duration-300 transform hover:-translate-y-2">
+                        <div class="text-center">
+                            <div class="inline-flex items-center justify-center w-20 h-20 bg-blue-100 rounded-full mb-6">
+                                <svg class="w-10 h-10 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                </svg>
+                            </div>
+                            <h2 class="text-2xl font-bold text-gray-900 mb-4">Patient Portal</h2>
+                            <p class="text-gray-600 mb-6">Book appointments, access health records, and consult with specialists</p>
+                            <button onclick="showLogin('patient')" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-8 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
+                                Patient Login
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Consultant Portal -->
+                    <div class="bg-white rounded-2xl shadow-xl p-8 border-2 border-transparent hover:border-green-500 transition-all duration-300 transform hover:-translate-y-2">
+                        <div class="text-center">
+                            <div class="inline-flex items-center justify-center w-20 h-20 bg-green-100 rounded-full mb-6">
+                                <svg class="w-10 h-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                </svg>
+                            </div>
+                            <h2 class="text-2xl font-bold text-gray-900 mb-4">Consultant Portal</h2>
+                            <p class="text-gray-600 mb-6">Manage patients, consultations, and medical records securely</p>
+                            <button onclick="showLogin('doctor')" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-8 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
+                                Consultant Login
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Features -->
+                <div class="mt-16 grid md:grid-cols-3 gap-6 text-center">
+                    <div class="bg-white p-6 rounded-xl shadow-md">
+                        <div class="text-3xl mb-3">🔒</div>
+                        <h3 class="font-bold text-gray-900 mb-2">Secure & Private</h3>
+                        <p class="text-sm text-gray-600">End-to-end encryption for all consultations</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-md">
+                        <div class="text-3xl mb-3">💬</div>
+                        <h3 class="font-bold text-gray-900 mb-2">Video Consultations</h3>
+                        <p class="text-sm text-gray-600">Real-time video calls with specialists</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-md">
+                        <div class="text-3xl mb-3">📊</div>
+                        <h3 class="font-bold text-gray-900 mb-2">Health Tracking</h3>
+                        <p class="text-sm text-gray-600">Monitor your diabetes management journey</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- LOGIN SECTION -->
+    <section id="loginSection" class="section">
+        <div class="min-h-screen flex items-center justify-center px-4 py-12">
+            <div class="max-w-md w-full">
+                <div class="bg-white rounded-2xl shadow-2xl p-8">
+                    <div class="text-center mb-8">
+                        <h2 class="text-3xl font-bold text-gray-900 mb-2" id="loginTitle">Patient Login</h2>
+                        <p class="text-gray-600">Enter your credentials to continue</p>
+                    </div>
+
+                    <form onsubmit="handleLogin(event)" class="space-y-6">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Username</label>
+                            <input type="text" id="loginUsername" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Password</label>
+                            <input type="password" id="loginPassword" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        </div>
+                        
+                        <div class="text-right">
+                            <button type="button" onclick="showForgotPassword()" class="text-sm text-blue-600 hover:text-blue-700 font-semibold">Forgot Password?</button>
+                        </div>
+
+                        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg shadow-lg transition-all">
+                            Login
+                        </button>
+                    </form>
+
+                    <div class="mt-6 text-center">
+                        <p class="text-gray-600">Don't have an account? <button onclick="showRegister()" class="text-blue-600 hover:text-blue-700 font-semibold">Register here</button></p>
+                    </div>
+
+                    <div class="mt-4 text-center">
+                        <button onclick="showLanding()" class="text-gray-600 hover:text-gray-800 font-semibold">← Back to Home</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- REGISTRATION SECTION -->
+    <section id="registerSection" class="section">
+        <div class="min-h-screen flex items-center justify-center px-4 py-12">
+            <div class="max-w-md w-full">
+                <div class="bg-white rounded-2xl shadow-2xl p-8">
+                    <div class="text-center mb-8">
+                        <h2 class="text-3xl font-bold text-gray-900 mb-2">Create Account</h2>
+                        <p class="text-gray-600">Join DiabetesCare Telemedicine Platform</p>
+                    </div>
+
+                    <form onsubmit="handleRegister(event)" class="space-y-6">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Full Name *</label>
+                            <input type="text" id="regName" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Enter your full name">
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Age *</label>
+                                <input type="number" id="regAge" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Age">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Gender *</label>
+                                <select id="regGender" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                    <option value="">Select</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Phone Number *</label>
+                            <input type="tel" id="regPhone" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="+234 800 000 0000">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Email (Optional)</label>
+                            <input type="email" id="regEmail" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="your@email.com">
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Username *</label>
+                                <input type="text" id="regUsername" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Username">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Password *</label>
+                                <input type="password" id="regPassword" required minlength="6" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Password">
+                            </div>
+                        </div>
+
+                        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg shadow-lg transition-all">
+                            Create Account
+                        </button>
+                    </form>
+
+                    <div class="mt-6 text-center">
+                        <p class="text-gray-600">Already have an account? <button onclick="showLogin('patient')" class="text-blue-600 hover:text-blue-700 font-semibold">Login here</button></p>
+                    </div>
+
+                    <div class="mt-4 text-center">
+                        <button onclick="showLanding()" class="text-gray-600 hover:text-gray-800 font-semibold">← Back to Home</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FORGOT PASSWORD SECTION -->
+    <section id="forgotPasswordSection" class="section">
+        <div class="min-h-screen flex items-center justify-center px-4 py-12">
+            <div class="max-w-md w-full">
+                <div class="bg-white rounded-2xl shadow-2xl p-8">
+                    <div class="text-center mb-8">
+                        <h2 class="text-3xl font-bold text-gray-900 mb-2">Reset Password</h2>
+                        <p class="text-gray-600">Enter the reset code sent to your email</p>
+                    </div>
+
+                    <!-- Step 1: Request Reset Code -->
+                    <div id="requestCodeStep">
+                        <form onsubmit="requestResetCode(event)" class="space-y-6">
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Username</label>
+                                <input type="text" id="resetUsername" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            </div>
+                            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg shadow-lg transition-all">
+                                Send Reset Code
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Step 2: Enter Reset Code -->
+                    <div id="verifyCodeStep" style="display: none;">
+                        <form onsubmit="verifyResetCode(event)" class="space-y-6">
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Reset Code</label>
+                                <input type="text" id="resetCode" required placeholder="Enter 6-digit code" maxlength="6" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-center text-2xl tracking-widest">
+                                <p class="text-sm text-gray-500 mt-2">Mock code for testing: <span class="font-mono font-bold text-blue-600">123456</span></p>
+                            </div>
+                            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg shadow-lg transition-all">
+                                Verify Code
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Step 3: Set New Password -->
+                    <div id="newPasswordStep" style="display: none;">
+                        <form onsubmit="setNewPassword(event)" class="space-y-6">
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">New Password</label>
+                                <input type="password" id="newPassword" required minlength="6" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Confirm Password</label>
+                                <input type="password" id="confirmPassword" required minlength="6" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            </div>
+                            <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-lg shadow-lg transition-all">
+                                Reset Password
+                            </button>
+                        </form>
+                    </div>
+
+                    <div class="mt-6 text-center">
+                        <button onclick="showLogin(currentUserType)" class="text-gray-600 hover:text-gray-800 font-semibold">← Back to Login</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PATIENT DASHBOARD -->
+    <section id="patientDashboard" class="section">
+        <!-- Navigation for logged-in user -->
+        <nav id="patientNav" class="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm hidden">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center h-16">
+                    <div class="flex items-center gap-4">
+                        <img src="./theclinic.png" alt="DiabetesCare Logo" class="logo-img" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 200 200%27%3E%3Crect fill=%27%230066FF%27 width=%27200%27 height=%27200%27 rx=%2740%27/%3E%3Cpath fill=%27white%27 d=%27M100 40 L100 160 M40 100 L160 100%27 stroke=%27white%27 stroke-width=%2716%27 stroke-linecap=%27round%27/%3E%3Ccircle cx=%27100%27 cy=%27100%27 r=%2725%27 fill=%27%2300C853%27/%3E%3C/svg%3E'">
+                        <span class="text-lg font-bold text-gray-900 hidden sm:block">Patient Portal</span>
+                        <span class="text-sm font-semibold text-blue-600 sm:hidden">Patient</span>
+                    </div>
+                    
+                    <div class="flex items-center gap-2">
+                        <!-- Notifications (Desktop) -->
+                        <div class="relative hidden sm:block">
+                            <button onclick="toggleNotifications('patient')" class="px-4 py-2 rounded-lg font-semibold text-gray-700 hover:bg-gray-100 transition relative">
+                                Notifications
+                                <span id="patientNotificationBadge" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center" style="display: none;">0</span>
+                            </button>
+                            <div id="patientNotificationDropdown" class="notification-dropdown">
+                                <div class="p-4 border-b border-gray-200 flex justify-between items-center">
+                                    <h3 class="font-bold text-gray-900">Notifications</h3>
+                                    <button onclick="clearAllNotifications('patient')" class="text-sm text-blue-600 hover:text-blue-700 font-semibold">Clear All</button>
+                                </div>
+                                <div id="patientNotificationList" class="divide-y divide-gray-100">
+                                    <div class="p-4 text-center text-gray-500 text-sm">No notifications</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Notifications (Mobile) -->
+                        <div class="relative sm:hidden">
+                            <button onclick="toggleNotifications('patient')" class="p-2 rounded-lg hover:bg-gray-100 transition relative">
+                                <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+                                </svg>
+                                <span id="patientNotificationBadgeMobile" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center" style="display: none;">0</span>
+                            </button>
+                            <div id="patientNotificationDropdownMobile" class="notification-dropdown" style="right: 0; width: 320px;">
+                                <div class="p-4 border-b border-gray-200 flex justify-between items-center">
+                                    <h3 class="font-bold text-gray-900">Notifications</h3>
+                                    <button onclick="clearAllNotifications('patient')" class="text-sm text-blue-600 hover:text-blue-700 font-semibold">Clear All</button>
+                                </div>
+                                <div id="patientNotificationListMobile" class="divide-y divide-gray-100">
+                                    <div class="p-4 text-center text-gray-500 text-sm">No notifications</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button onclick="showPatientDashboard()" class="hidden sm:block px-4 py-2 rounded-lg font-semibold text-gray-700 hover:bg-gray-100 transition">Dashboard</button>
+                        <button onclick="logout()" class="px-4 py-2 rounded-lg font-semibold text-white bg-red-500 hover:bg-red-600 transition">Logout</button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="mb-8">
+                <h1 class="text-3xl font-bold text-gray-900">Welcome, <span id="patientName">Patient</span></h1>
+                <p class="text-gray-600 mt-2">Manage your appointments and health records</p>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                <button onclick="openModal('bookAppointmentModal')" class="bg-gradient-to-r from-blue-500 to-blue-600 text-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1">
+                    <div class="text-3xl mb-2">📅</div>
+                    <h3 class="text-xl font-bold">Book Appointment</h3>
+                    <p class="text-sm text-blue-100 mt-1">Schedule with a specialist</p>
+                </button>
+                
+                <button onclick="openModal('uploadTestModal')" class="bg-gradient-to-r from-green-500 to-green-600 text-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1">
+                    <div class="text-3xl mb-2">📊</div>
+                    <h3 class="text-xl font-bold">Upload Test Results</h3>
+                    <p class="text-sm text-green-100 mt-1">Share lab reports securely</p>
+                </button>
+                
+                <button onclick="openModal('medicalHistoryModal'); loadMedicalHistory()" class="bg-gradient-to-r from-purple-500 to-purple-600 text-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1">
+                    <div class="text-3xl mb-2">📋</div>
+                    <h3 class="text-xl font-bold">Medical History</h3>
+                    <p class="text-sm text-purple-100 mt-1">View your records</p>
+                </button>
+
+                <button onclick="openModal('paymentHistoryModal'); loadPaymentHistory()" class="bg-gradient-to-r from-orange-500 to-orange-600 text-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1">
+                    <div class="text-3xl mb-2">💳</div>
+                    <h3 class="text-xl font-bold">Payment History</h3>
+                    <p class="text-sm text-orange-100 mt-1">View transactions</p>
+                </button>
+            </div>
+
+            <!-- My Appointments -->
+            <div class="bg-white rounded-xl shadow-md p-6 mb-6">
+                <h2 class="text-2xl font-bold text-gray-900 mb-4">My Appointments</h2>
+                
+                <!-- Desktop View -->
+                <div class="hidden md:block space-y-4" id="patientAppointmentsList">
+                    <!-- Appointments will be populated here -->
+                </div>
+
+                <!-- Mobile View with Horizontal Scroll -->
+                <div class="md:hidden scroll-container">
+                    <div class="flex gap-4 pb-4" id="patientAppointmentsListMobile" style="min-width: max-content;">
+                        <!-- Mobile appointments will be populated here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- DOCTOR DASHBOARD -->
+    <section id="doctorDashboard" class="section">
+        <!-- Navigation for logged-in doctor -->
+        <nav id="doctorNav" class="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm hidden">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center h-16">
+                    <div class="flex items-center gap-4">
+                        <img src="./theclinic.png" alt="DiabetesCare Logo" class="logo-img" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 200 200%27%3E%3Crect fill=%27%230066FF%27 width=%27200%27 height=%27200%27 rx=%2740%27/%3E%3Cpath fill=%27white%27 d=%27M100 40 L100 160 M40 100 L160 100%27 stroke=%27white%27 stroke-width=%2716%27 stroke-linecap=%27round%27/%3E%3Ccircle cx=%27100%27 cy=%27100%27 r=%2725%27 fill=%27%2300C853%27/%3E%3C/svg%3E'">
+                        <span class="text-lg font-bold text-gray-900 hidden sm:block">Consultant Portal</span>
+                        <span class="text-sm font-semibold text-green-600 sm:hidden">Consultant</span>
+                    </div>
+                    
+                    <div class="flex items-center gap-2">
+                        <!-- Notifications (Desktop) -->
+                        <div class="relative hidden sm:block">
+                            <button onclick="toggleNotifications('doctor')" class="px-4 py-2 rounded-lg font-semibold text-gray-700 hover:bg-gray-100 transition relative">
+                                Notifications
+                                <span id="doctorNotificationBadge" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center" style="display: none;">0</span>
+                            </button>
+                            <div id="doctorNotificationDropdown" class="notification-dropdown">
+                                <div class="p-4 border-b border-gray-200 flex justify-between items-center">
+                                    <h3 class="font-bold text-gray-900">Notifications</h3>
+                                    <button onclick="clearAllNotifications('doctor')" class="text-sm text-blue-600 hover:text-blue-700 font-semibold">Clear All</button>
+                                </div>
+                                <div id="doctorNotificationList" class="divide-y divide-gray-100">
+                                    <div class="p-4 text-center text-gray-500 text-sm">No notifications</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Notifications (Mobile) -->
+                        <div class="relative sm:hidden">
+                            <button onclick="toggleNotifications('doctor')" class="p-2 rounded-lg hover:bg-gray-100 transition relative">
+                                <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+                                </svg>
+                                <span id="doctorNotificationBadgeMobile" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center" style="display: none;">0</span>
+                            </button>
+                            <div id="doctorNotificationDropdownMobile" class="notification-dropdown" style="right: 0; width: 320px;">
+                                <div class="p-4 border-b border-gray-200 flex justify-between items-center">
+                                    <h3 class="font-bold text-gray-900">Notifications</h3>
+                                    <button onclick="clearAllNotifications('doctor')" class="text-sm text-blue-600 hover:text-blue-700 font-semibold">Clear All</button>
+                                </div>
+                                <div id="doctorNotificationListMobile" class="divide-y divide-gray-100">
+                                    <div class="p-4 text-center text-gray-500 text-sm">No notifications</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button onclick="showDoctorDashboard()" class="hidden sm:block px-4 py-2 rounded-lg font-semibold text-gray-700 hover:bg-gray-100 transition">Dashboard</button>
+                        <button onclick="logout()" class="px-4 py-2 rounded-lg font-semibold text-white bg-red-500 hover:bg-red-600 transition">Logout</button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="mb-8">
+                <h1 class="text-3xl font-bold text-gray-900">Welcome, <span id="doctorName">Dr. Consultant</span></h1>
+                <p class="text-gray-600 mt-2">Manage your consultations and patients</p>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-8">
+                <button onclick="openModal('patientManagementModal'); loadPatientManagement()" class="bg-gradient-to-r from-indigo-500 to-indigo-600 text-white p-4 rounded-xl shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1">
+                    <div class="text-2xl mb-1">👥</div>
+                    <h3 class="text-lg font-bold">Patient Management</h3>
+                </button>
+
+                <button onclick="openModal('createPatientModal')" class="bg-gradient-to-r from-blue-500 to-blue-600 text-white p-4 rounded-xl shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1">
+                    <div class="text-2xl mb-1">👤</div>
+                    <h3 class="text-lg font-bold">Create Patient</h3>
+                </button>
+                
+                <button onclick="openModal('prescriptionModal')" class="bg-gradient-to-r from-green-500 to-green-600 text-white p-4 rounded-xl shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1">
+                    <div class="text-2xl mb-1">💊</div>
+                    <h3 class="text-lg font-bold">Write Prescription</h3>
+                </button>
+                
+                <button onclick="openModal('labTestModal')" class="bg-gradient-to-r from-purple-500 to-purple-600 text-white p-4 rounded-xl shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1">
+                    <div class="text-2xl mb-1">🔬</div>
+                    <h3 class="text-lg font-bold">Request Lab Tests</h3>
+                </button>
+
+                <button onclick="openModal('availabilityModal')" class="bg-gradient-to-r from-orange-500 to-orange-600 text-white p-4 rounded-xl shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1">
+                    <div class="text-2xl mb-1">📅</div>
+                    <h3 class="text-lg font-bold">Set Availability</h3>
+                </button>
+            </div>
+
+            <!-- Appointment Requests -->
+            <div class="bg-white rounded-xl shadow-md p-6 mb-6">
+                <h2 class="text-2xl font-bold text-gray-900 mb-4">Appointment Requests</h2>
+                
+                <!-- Desktop View -->
+                <div class="hidden md:block space-y-4" id="doctorRequestsList">
+                    <!-- Requests will be populated here -->
+                </div>
+
+                <!-- Mobile View with Horizontal Scroll -->
+                <div class="md:hidden scroll-container">
+                    <div class="flex gap-4 pb-4" id="doctorRequestsListMobile" style="min-width: max-content;">
+                        <!-- Mobile requests will be populated here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- My Appointments -->
+            <div class="bg-white rounded-xl shadow-md p-6">
+                <h2 class="text-2xl font-bold text-gray-900 mb-4">My Appointments</h2>
+                
+                <!-- Desktop View -->
+                <div class="hidden md:block space-y-4" id="doctorAppointmentsList">
+                    <!-- Appointments will be populated here -->
+                </div>
+
+                <!-- Mobile View with Horizontal Scroll -->
+                <div class="md:hidden scroll-container">
+                    <div class="flex gap-4 pb-4" id="doctorAppointmentsListMobile" style="min-width: max-content;">
+                        <!-- Mobile appointments will be populated here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- BOOK APPOINTMENT MODAL -->
+    <div id="bookAppointmentModal" class="modal">
+        <div class="modal-content">
+            <div class="p-6 border-b border-gray-200">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-2xl font-bold text-gray-900">📅 Book Appointment</h2>
+                    <button onclick="closeModal('bookAppointmentModal')" class="text-gray-400 hover:text-gray-600 text-3xl font-bold">&times;</button>
+                </div>
+            </div>
+            <div class="p-6">
+                <form onsubmit="bookAppointment(event)" class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Select Consultant *</label>
+                        <select class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+                            <option value="">Choose consultant</option>
+                            <option>Dr. Ahmad Ismail - Endocrinologist</option>
+                            <option>Dr. Sarah Johnson - Diabetologist</option>
+                            <option>Dr. Michael Chen - Internal Medicine</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Preferred Date *</label>
+                        <input type="date" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Preferred Time *</label>
+                        <select class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+                            <option value="">Select time</option>
+                            <option>9:00 AM</option>
+                            <option>10:00 AM</option>
+                            <option>11:00 AM</option>
+                            <option>2:00 PM</option>
+                            <option>3:00 PM</option>
+                            <option>4:00 PM</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Reason for Visit *</label>
+                        <select id="reasonForVisit" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required onchange="toggleOtherReason()">
+                            <option value="">Select reason</option>
+                            <option value="Follow-up">Follow-up</option>
+                            <option value="Routine Check-up">Routine Check-up</option>
+                            <option value="Blood Sugar Review">Blood Sugar Review</option>
+                            <option value="Medication Adjustment">Medication Adjustment</option>
+                            <option value="New Symptoms">New Symptoms</option>
+                            <option value="Diabetes Consultation">Diabetes Consultation</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+
+                    <div id="otherReasonField" style="display: none;">
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Please specify *</label>
+                        <textarea id="otherReasonText" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" rows="3" placeholder="Describe your reason for visit..."></textarea>
+                    </div>
+                    
+                    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg shadow-lg transition-all">
+                        Submit Request
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- UPLOAD TEST MODAL -->
+    <div id="uploadTestModal" class="modal">
+        <div class="modal-content">
+            <div class="p-6 border-b border-gray-200">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-2xl font-bold text-gray-900">📊 Upload Test Results</h2>
+                    <button onclick="closeModal('uploadTestModal')" class="text-gray-400 hover:text-gray-600 text-3xl font-bold">&times;</button>
+                </div>
+            </div>
+            <div class="p-6">
+                <form onsubmit="uploadTest(event)" class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Test Type *</label>
+                        <select class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+                            <option value="">Select test type</option>
+                            <option>HbA1c</option>
+                            <option>Fasting Blood Sugar</option>
+                            <option>Lipid Profile</option>
+                            <option>Kidney Function</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Upload File *</label>
+                        <input type="file" accept=".pdf,.jpg,.jpeg,.png" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Additional Notes</label>
+                        <textarea class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" rows="3" placeholder="Any additional information..."></textarea>
+                    </div>
+                    
+                    <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-lg shadow-lg transition-all">
+                        Upload Results
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- RESCHEDULE MODAL -->
+    <div id="rescheduleModal" class="modal">
+        <div class="modal-content">
+            <div class="p-6 border-b border-gray-200">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-2xl font-bold text-gray-900">📅 Reschedule Appointment</h2>
+                    <button onclick="closeModal('rescheduleModal')" class="text-gray-400 hover:text-gray-600 text-3xl font-bold">&times;</button>
+                </div>
+            </div>
+            <div class="p-6">
+                <form onsubmit="submitReschedule(event)" class="space-y-6">
+                    <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded">
+                        <p class="text-sm text-gray-700">
+                            <span class="font-semibold">Current appointment:</span>
+                            <span id="currentAppointmentInfo"></span>
+                        </p>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">New Date *</label>
+                        <input type="date" id="rescheduleDate" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">New Time *</label>
+                        <select id="rescheduleTime" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+                            <option value="">Select time</option>
+                            <option>9:00 AM</option>
+                            <option>10:00 AM</option>
+                            <option>11:00 AM</option>
+                            <option>2:00 PM</option>
+                            <option>3:00 PM</option>
+                            <option>4:00 PM</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Reason for Rescheduling</label>
+                        <textarea id="rescheduleReason" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" rows="3" placeholder="Optional: Explain why you need to reschedule..."></textarea>
+                    </div>
+                    
+                    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg shadow-lg transition-all">
+                        Confirm Reschedule
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- VIDEO CONSULTATION MODAL -->
+    <div id="videoConsultationModal" class="modal">
+        <div class="modal-content" style="max-width: 900px;">
+            <div class="p-6 border-b border-gray-200">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-2xl font-bold text-gray-900">🎥 Video Consultation</h2>
+                    <button onclick="endVideoCall()" class="text-gray-400 hover:text-gray-600 text-3xl font-bold">&times;</button>
+                </div>
+            </div>
+            <div class="p-6">
+                <!-- Waiting Room -->
+                <div id="waitingRoom" class="text-center py-12">
+                    <div class="text-6xl mb-4">⏰</div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2">Waiting for consultation to start...</h3>
+                    <p class="text-gray-600">Your consultant will join shortly</p>
+                    <div class="mt-6">
+                        <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                    </div>
+                </div>
+
+                <!-- Video Call Interface -->
+                <div id="videoCallInterface" style="display: none;">
+                    <div class="space-y-4">
+                        <!-- Remote Video -->
+                        <div class="video-container bg-gray-900 rounded-lg" style="height: 400px; position: relative;">
+                            <video id="remoteVideo" autoplay playsinline class="w-full h-full object-cover"></video>
+                            <div id="remoteVideoPlaceholder" class="absolute inset-0 flex items-center justify-center">
+                                <div class="text-center text-white">
+                                    <div class="text-6xl mb-4">👨‍⚕️</div>
+                                    <p class="text-lg">Connecting to consultant...</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Local Video (Picture-in-Picture) -->
+                            <div class="local-video">
+                                <video id="localVideo" autoplay playsinline muted></video>
+                            </div>
+                        </div>
+
+                        <!-- Call Controls -->
+                        <div class="flex justify-center gap-4">
+                            <button id="muteBtn" onclick="toggleMute()" class="bg-gray-700 hover:bg-gray-800 text-white p-4 rounded-full transition">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path>
+                                </svg>
+                            </button>
+                            
+                            <button id="videoToggleBtn" onclick="toggleVideo()" class="bg-gray-700 hover:bg-gray-800 text-white p-4 rounded-full transition">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                                </svg>
+                            </button>
+                            
+                            <button onclick="endVideoCall()" class="bg-red-600 hover:bg-red-700 text-white px-6 py-4 rounded-full font-bold transition">
+                                End Call
+                            </button>
+                        </div>
+
+                        <!-- Call Info -->
+                        <div class="bg-gray-50 rounded-lg p-4 text-center">
+                            <p class="text-sm text-gray-600">
+                                <span class="font-semibold">Consultation with:</span>
+                                <span id="consultantNameInCall"></span>
+                            </p>
+                            <p class="text-xs text-gray-500 mt-1" id="callDuration">Duration: 00:00</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CREATE PATIENT MODAL -->
+    <div id="createPatientModal" class="modal">
+        <div class="modal-content">
+            <div class="p-6 border-b border-gray-200">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-2xl font-bold text-gray-900">👤 Create Patient Account</h2>
+                    <button onclick="closeModal('createPatientModal')" class="text-gray-400 hover:text-gray-600 text-3xl font-bold">&times;</button>
+                </div>
+            </div>
+            <div class="p-6">
+                <form onsubmit="createPatient(event)" class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Full Name *</label>
+                        <input type="text" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Patient's full name" required>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Age *</label>
+                            <input type="number" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Gender *</label>
+                            <select class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+                                <option value="">Select</option>
+                                <option>Male</option>
+                                <option>Female</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Phone *</label>
+                        <input type="tel" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Email</label>
+                        <input type="email" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Username *</label>
+                            <input type="text" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Password *</label>
+                            <input type="password" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg shadow-lg transition-all">
+                        Create Account
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- PRESCRIPTION MODAL -->
+    <div id="prescriptionModal" class="modal">
+        <div class="modal-content">
+            <div class="p-6 border-b border-gray-200">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-2xl font-bold text-gray-900">💊 Write Prescription</h2>
+                    <button onclick="closeModal('prescriptionModal')" class="text-gray-400 hover:text-gray-600 text-3xl font-bold">&times;</button>
+                </div>
+            </div>
+            <div class="p-6">
+                <form onsubmit="createPrescription(event)" class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Select Patient *</label>
+                        <select id="prescriptionPatient" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+                            <option value="">Choose patient</option>
+                            <option>Shamsuddeen Usman</option>
+                            <option>Fatima Ismail</option>
+                            <option>Jeneth Danjummai</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Clinical Diagnosis *</label>
+                        <textarea class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" rows="3" placeholder="Enter diagnosis..." required></textarea>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Medications & Dosage *</label>
+                        <textarea class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" rows="4" placeholder="List medications with dosage..." required></textarea>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Medical Advice</label>
+                        <textarea class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" rows="3" placeholder="Additional instructions..."></textarea>
+                    </div>
+                    
+                    <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-lg shadow-lg transition-all">
+                        Generate Prescription
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- LAB TEST REQUEST MODAL -->
+    <div id="labTestModal" class="modal">
+        <div class="modal-content">
+            <div class="p-6 border-b border-gray-200">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-2xl font-bold text-gray-900">🔬 Request Lab Tests</h2>
+                    <button onclick="closeModal('labTestModal')" class="text-gray-400 hover:text-gray-600 text-3xl font-bold">&times;</button>
+                </div>
+            </div>
+            <div class="p-6">
+                <form onsubmit="requestLabTests(event)" class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Select Patient *</label>
+                        <select class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+                            <option value="">Choose patient</option>
+                            <option>Shamsuddeen Usman</option>
+                            <option>Fatima Ismail</option>
+                            <option>Jeneth Danjummai</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Select Tests *</label>
+                        <div class="space-y-3 mt-3">
+                            <label class="flex items-center gap-3 cursor-pointer">
+                                <input type="checkbox" value="HbA1c" class="w-4 h-4 text-blue-600 rounded focus:ring-blue-500">
+                                <span class="text-gray-700">HbA1c (Glycated Hemoglobin)</span>
+                            </label>
+                            <label class="flex items-center gap-3 cursor-pointer">
+                                <input type="checkbox" value="FBS" class="w-4 h-4 text-blue-600 rounded focus:ring-blue-500">
+                                <span class="text-gray-700">Fasting Blood Sugar</span>
+                            </label>
+                            <label class="flex items-center gap-3 cursor-pointer">
+                                <input type="checkbox" value="Lipid" class="w-4 h-4 text-blue-600 rounded focus:ring-blue-500">
+                                <span class="text-gray-700">Lipid Profile</span>
+                            </label>
+                            <label class="flex items-center gap-3 cursor-pointer">
+                                <input type="checkbox" value="Kidney" class="w-4 h-4 text-blue-600 rounded focus:ring-blue-500">
+                                <span class="text-gray-700">Kidney Function Test</span>
+                            </label>
+                            <label class="flex items-center gap-3 cursor-pointer">
+                                <input type="checkbox" value="Liver" class="w-4 h-4 text-blue-600 rounded focus:ring-blue-500">
+                                <span class="text-gray-700">Liver Function Test</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Additional Notes</label>
+                        <textarea class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" rows="3" placeholder="Any special instructions..."></textarea>
+                    </div>
+                    
+                    <button type="submit" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 rounded-lg shadow-lg transition-all">
+                        Send Request
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- AVAILABILITY MODAL -->
+    <div id="availabilityModal" class="modal">
+        <div class="modal-content">
+            <div class="p-6 border-b border-gray-200">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-2xl font-bold text-gray-900">📅 Set Availability</h2>
+                    <button onclick="closeModal('availabilityModal')" class="text-gray-400 hover:text-gray-600 text-3xl font-bold">&times;</button>
+                </div>
+            </div>
+            <div class="p-6">
+                <form onsubmit="saveAvailability(event)" class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-3">Available Days *</label>
+                        <div class="space-y-3">
+                            <label class="flex items-center gap-3 cursor-pointer">
+                                <input type="checkbox" value="Monday" class="w-4 h-4 text-blue-600 rounded focus:ring-blue-500">
+                                <span class="text-gray-700">Monday</span>
+                            </label>
+                            <label class="flex items-center gap-3 cursor-pointer">
+                                <input type="checkbox" value="Tuesday" class="w-4 h-4 text-blue-600 rounded focus:ring-blue-500">
+                                <span class="text-gray-700">Tuesday</span>
+                            </label>
+                            <label class="flex items-center gap-3 cursor-pointer">
+                                <input type="checkbox" value="Wednesday" class="w-4 h-4 text-blue-600 rounded focus:ring-blue-500">
+                                <span class="text-gray-700">Wednesday</span>
+                            </label>
+                            <label class="flex items-center gap-3 cursor-pointer">
+                                <input type="checkbox" value="Thursday" class="w-4 h-4 text-blue-600 rounded focus:ring-blue-500">
+                                <span class="text-gray-700">Thursday</span>
+                            </label>
+                            <label class="flex items-center gap-3 cursor-pointer">
+                                <input type="checkbox" value="Friday" class="w-4 h-4 text-blue-600 rounded focus:ring-blue-500">
+                                <span class="text-gray-700">Friday</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-3 rounded-lg shadow-lg transition-all">
+                        Save Availability
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAYMENT HISTORY MODAL -->
+    <div id="paymentHistoryModal" class="modal">
+        <div class="modal-content">
+            <div class="p-6 border-b border-gray-200">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-2xl font-bold text-gray-900">💳 Payment History</h2>
+                    <button onclick="closeModal('paymentHistoryModal')" class="text-gray-400 hover:text-gray-600 text-3xl font-bold">&times;</button>
+                </div>
+            </div>
+            <div class="p-6">
+                <div id="paymentHistoryList" class="space-y-4">
+                    <!-- Payment history will be populated here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MEDICAL HISTORY MODAL -->
+    <div id="medicalHistoryModal" class="modal">
+        <div class="modal-content" style="max-width: 800px;">
+            <div class="p-6 border-b border-gray-200">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-2xl font-bold text-gray-900">📋 Medical History</h2>
+                    <button onclick="closeModal('medicalHistoryModal')" class="text-gray-400 hover:text-gray-600 text-3xl font-bold">&times;</button>
+                </div>
+            </div>
+            <div class="p-6">
+                <div class="mb-6">
+                    <h3 class="text-lg font-bold mb-4">Previous Appointments</h3>
+                    <div id="medicalHistoryAppointments" class="space-y-3">
+                        <!-- Appointment history will be populated here -->
+                    </div>
+                </div>
+                
+                <div class="mb-6">
+                    <h3 class="text-lg font-bold mb-4">Prescriptions</h3>
+                    <div id="medicalHistoryPrescriptions" class="space-y-3">
+                        <!-- Prescriptions will be populated here -->
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Lab Test Results</h3>
+                    <div id="medicalHistoryLabTests" class="space-y-3">
+                        <!-- Lab tests will be populated here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PATIENT MANAGEMENT MODAL -->
+    <div id="patientManagementModal" class="modal">
+        <div class="modal-content" style="max-width: 900px;">
+            <div class="p-6 border-b border-gray-200">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-2xl font-bold text-gray-900">👥 Patient Management</h2>
+                    <button onclick="closeModal('patientManagementModal')" class="text-gray-400 hover:text-gray-600 text-3xl font-bold">&times;</button>
+                </div>
+            </div>
+            <div class="p-6">
+                <div class="mb-6">
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Select Patient</label>
+                    <select id="patientSelect" onchange="loadPatientDetails()" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <option value="">Choose a patient</option>
+                    </select>
+                </div>
+
+                <div id="patientDetailsContainer" class="hidden">
+                    <!-- Patient Info -->
+                    <div class="bg-blue-50 rounded-lg p-4 mb-6">
+                        <h3 class="font-bold text-lg mb-2">Patient Information</h3>
+                        <div class="grid grid-cols-2 gap-4 text-sm">
+                            <div><span class="font-semibold">Name:</span> <span id="pmPatientName"></span></div>
+                            <div><span class="font-semibold">Age:</span> <span id="pmPatientAge"></span></div>
+                            <div><span class="font-semibold">Gender:</span> <span id="pmPatientGender"></span></div>
+                            <div><span class="font-semibold">Phone:</span> <span id="pmPatientPhone"></span></div>
+                        </div>
+                    </div>
+
+                    <!-- Date Filter -->
+                    <div class="mb-6 grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">From Date</label>
+                            <input type="date" id="pmFromDate" class="w-full px-4 py-2 border border-gray-300 rounded-lg" onchange="filterPatientRecords()">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">To Date</label>
+                            <input type="date" id="pmToDate" class="w-full px-4 py-2 border border-gray-300 rounded-lg" onchange="filterPatientRecords()">
+                        </div>
+                    </div>
+
+                    <!-- Appointments -->
+                    <div class="mb-6">
+                        <h3 class="font-bold text-lg mb-3">Appointment History</h3>
+                        <div id="pmAppointments" class="space-y-2 max-h-64 overflow-y-auto"></div>
+                    </div>
+
+                    <!-- Prescriptions -->
+                    <div class="mb-6">
+                        <h3 class="font-bold text-lg mb-3">Prescriptions</h3>
+                        <div id="pmPrescriptions" class="space-y-2 max-h-64 overflow-y-auto"></div>
+                    </div>
+
+                    <!-- Lab Results -->
+                    <div>
+                        <h3 class="font-bold text-lg mb-3">Lab Test Results</h3>
+                        <div id="pmLabResults" class="space-y-2 max-h-64 overflow-y-auto"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global Variables
+        let currentUserType = null;
+        let currentUser = null;
+        let appointments = [];
+        let notifications = {
+            patient: [],
+            doctor: []
+        };
+        let availableDays = ['Monday', 'Friday', 'Saturday'];
+        let currentRescheduleId = null;
+        let payments = [];
+        let patients = [
+            { username: 'shamsuddeen', name: 'Shamsuddeen Usman', password: 'pass123', email: 'shamsuddeen@email.com', phone: '+234 800 111 1111', age: 45, gender: 'Male', prescriptions: [], labTests: [] },
+            { username: 'fatima', name: 'Fatima Ismail', password: 'pass123', email: 'fatima@email.com', phone: '+234 800 222 2222', age: 38, gender: 'Female', prescriptions: [], labTests: [] },
+            { username: 'jeneth', name: 'Jeneth Danjummai', password: 'pass123', email: 'jeneth@email.com', phone: '+234 800 333 3333', age: 52, gender: 'Female', prescriptions: [], labTests: [] }
+        ];
+
+        // WebRTC Variables
+        let localStream = null;
+        let remoteStream = null;
+        let peerConnection = null;
+        let currentCallAppointmentId = null;
+        let callStartTime = null;
+        let callDurationInterval = null;
+        let signalingChannel = null;
+
+        // ICE Configuration for WebRTC
+        const iceConfiguration = {
+            iceServers: [
+                { urls: 'stun:stun.l.google.com:19302' },
+                { urls: 'stun:stun1.l.google.com:19302' }
+            ]
+        };
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            showLanding();
+            initializeTestData();
+            hideAllNavs();
+            document.getElementById('publicNav').classList.remove('hidden');
+        });
+
+        // Navigation Functions
+        function showLanding() {
+            hideAllSections();
+            document.getElementById('landingSection').classList.add('active');
+            currentUserType = null;
+            currentUser = null;
+        }
+
+        function showLogin(type) {
+            hideAllSections();
+            document.getElementById('loginSection').classList.add('active');
+            currentUserType = type;
+            document.getElementById('loginTitle').textContent = type === 'patient' ? 'Patient Login' : 'Consultant Login';
+        }
+
+        function showForgotPassword() {
+            hideAllSections();
+            document.getElementById('forgotPasswordSection').classList.add('active');
+            // Reset form steps
+            document.getElementById('requestCodeStep').style.display = 'block';
+            document.getElementById('verifyCodeStep').style.display = 'none';
+            document.getElementById('newPasswordStep').style.display = 'none';
+        }
+
+        function showPatientDashboard() {
+            hideAllSections();
+            document.getElementById('patientDashboard').classList.add('active');
+            renderPatientAppointments();
+            updateNotificationBadge('patient');
+        }
+
+        function showDoctorDashboard() {
+            hideAllSections();
+            document.getElementById('doctorDashboard').classList.add('active');
+            renderDoctorAppointments();
+            updateNotificationBadge('doctor');
+        }
+
+        function hideAllSections() {
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+        }
+
+        // Mobile Menu Toggle
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('active');
+        }
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', function(event) {
+            const menu = document.getElementById('mobileMenu');
+            const menuBtn = document.getElementById('mobileMenuBtn');
+            
+            if (menu && menuBtn && menu.classList.contains('active')) {
+                if (!menu.contains(event.target) && !menuBtn.contains(event.target)) {
+                    menu.classList.remove('active');
+                }
+            }
+        });
+
+        // Login Handler
+        function handleLogin(event) {
+            event.preventDefault();
+            const username = document.getElementById('loginUsername').value.trim().toLowerCase();
+            const password = document.getElementById('loginPassword').value;
+            
+            // Doctor login
+            if (username === 'doctor' && password === 'doctor123') {
+                currentUser = 'Dr. Ahmad Ismail';
+                currentUserType = 'doctor';
+                hideAllNavs();
+                document.getElementById('availabilityBanner').classList.add('hidden');
+                document.getElementById('doctorNav').classList.remove('hidden');
+                document.getElementById('doctorName').textContent = 'Dr. Ahmad Ismail';
+                showDoctorDashboard();
+                return;
+            }
+            
+            // Patient login
+            const patient = patients.find(p => p.username === username && p.password === password);
+            if (patient) {
+                currentUser = patient.name;
+                currentUserType = 'patient';
+                hideAllNavs();
+                document.getElementById('availabilityBanner').classList.remove('hidden');
+                document.getElementById('patientNav').classList.remove('hidden');
+                document.getElementById('patientName').textContent = patient.name;
+                showPatientDashboard();
+                return;
+            }
+            
+            alert('❌ Invalid credentials!\n\nDemo login:\nDoctor: doctor / doctor123\nPatients: shamsuddeen, fatima, jeneth / pass123');
+        }
+
+        // Logout
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                currentUser = null;
+                currentUserType = null;
+                hideAllNavs();
+                document.getElementById('availabilityBanner').classList.add('hidden');
+                document.getElementById('publicNav').classList.remove('hidden');
+                showLanding();
+            }
+        }
+
+        // Forgot Password Functions
+        function requestResetCode(event) {
+            event.preventDefault();
+            const username = document.getElementById('resetUsername').value;
+            
+            // Mock: Show success message
+            alert(`✅ Reset code sent to your email!\n\nFor testing, use code: 123456`);
+            
+            // Show verify code step
+            document.getElementById('requestCodeStep').style.display = 'none';
+            document.getElementById('verifyCodeStep').style.display = 'block';
+        }
+
+        function verifyResetCode(event) {
+            event.preventDefault();
+            const code = document.getElementById('resetCode').value;
+            
+            if (code === '123456') {
+                // Show new password step
+                document.getElementById('verifyCodeStep').style.display = 'none';
+                document.getElementById('newPasswordStep').style.display = 'block';
+            } else {
+                alert('❌ Invalid reset code. Please use 123456 for testing.');
+            }
+        }
+
+        function setNewPassword(event) {
+            event.preventDefault();
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            if (newPassword !== confirmPassword) {
+                alert('❌ Passwords do not match!');
+                return;
+            }
+            
+            if (newPassword.length < 6) {
+                alert('❌ Password must be at least 6 characters long!');
+                return;
+            }
+            
+            alert('✅ Password reset successful!\n\nYou can now login with your new password.');
+            showLogin(currentUserType);
+        }
+
+        // Modal Functions
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        // Toggle "Other" reason field
+        function toggleOtherReason() {
+            const select = document.getElementById('reasonForVisit');
+            const otherField = document.getElementById('otherReasonField');
+            const otherText = document.getElementById('otherReasonText');
+            
+            if (select.value === 'Other') {
+                otherField.style.display = 'block';
+                otherText.required = true;
+            } else {
+                otherField.style.display = 'none';
+                otherText.required = false;
+                otherText.value = '';
+            }
+        }
+
+        // Notification Functions
+        function toggleNotifications(type) {
+            // Close all other dropdowns first
+            document.querySelectorAll('.notification-dropdown').forEach(dropdown => {
+                if (!dropdown.id.includes(type)) {
+                    dropdown.classList.remove('active');
+                }
+            });
+
+            // Toggle the clicked dropdown (both desktop and mobile)
+            const desktop = document.getElementById(`${type}NotificationDropdown`);
+            const mobile = document.getElementById(`${type}NotificationDropdownMobile`);
+            
+            desktop.classList.toggle('active');
+            mobile.classList.toggle('active');
+        }
+
+        // Close notifications when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.notification-dropdown') && !e.target.closest('button[onclick*="toggleNotifications"]')) {
+                document.querySelectorAll('.notification-dropdown').forEach(dropdown => {
+                    dropdown.classList.remove('active');
+                });
+            }
+        });
+
+        function addNotification(type, message) {
+            const notification = {
+                id: Date.now(),
+                message: message,
+                timestamp: new Date().toLocaleString()
+            };
+            
+            notifications[type].unshift(notification);
+            updateNotificationBadge(type);
+            renderNotifications(type);
+        }
+
+        function clearNotification(type, id) {
+            notifications[type] = notifications[type].filter(n => n.id !== id);
+            updateNotificationBadge(type);
+            renderNotifications(type);
+        }
+
+        function clearAllNotifications(type) {
+            notifications[type] = [];
+            updateNotificationBadge(type);
+            renderNotifications(type);
+        }
+
+        function updateNotificationBadge(type) {
+            const count = notifications[type].length;
+            const badge = document.getElementById(`${type}NotificationBadge`);
+            const badgeMobile = document.getElementById(`${type}NotificationBadgeMobile`);
+            
+            if (badge) {
+                badge.textContent = count;
+                badge.style.display = count > 0 ? 'flex' : 'none';
+            }
+            
+            if (badgeMobile) {
+                badgeMobile.textContent = count;
+                badgeMobile.style.display = count > 0 ? 'flex' : 'none';
+            }
+        }
+
+        function renderNotifications(type) {
+            const list = document.getElementById(`${type}NotificationList`);
+            const listMobile = document.getElementById(`${type}NotificationListMobile`);
+            
+            if (notifications[type].length === 0) {
+                const emptyHtml = '<div class="p-4 text-center text-gray-500 text-sm">No notifications</div>';
+                list.innerHTML = emptyHtml;
+                listMobile.innerHTML = emptyHtml;
+                return;
+            }
+            
+            const html = notifications[type].map(notif => `
+                <div class="p-4 hover:bg-gray-50 transition">
+                    <div class="flex justify-between items-start gap-3">
+                        <div class="flex-1">
+                            <p class="text-sm text-gray-800">${notif.message}</p>
+                            <p class="text-xs text-gray-500 mt-1">${notif.timestamp}</p>
+                        </div>
+                        <button onclick="clearNotification('${type}', ${notif.id})" class="text-gray-400 hover:text-red-600 transition">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+            
+            list.innerHTML = html;
+            listMobile.innerHTML = html;
+        }
+
+        // Appointment Functions
+        function bookAppointment(event) {
+            event.preventDefault();
+            const form = event.target;
+            const reasonSelect = document.getElementById('reasonForVisit');
+            let reason = reasonSelect.value;
+            
+            if (reason === 'Other') {
+                const otherText = document.getElementById('otherReasonText').value;
+                reason = `Other: ${otherText}`;
+            }
+            
+            const date = form.querySelector('input[type="date"]').value;
+            const time = form.querySelectorAll('select')[1].value;
+            
+            // Process payment first
+            const transactionId = 'TXN-' + Date.now();
+            const payment = {
+                id: Date.now(),
+                transactionId: transactionId,
+                patient: currentUser,
+                date: new Date().toLocaleDateString(),
+                amount: 15000,
+                purpose: `Consultation on ${date} at ${time}`,
+                status: 'Paid'
+            };
+            
+            payments.push(payment);
+            
+            const appointment = {
+                id: Date.now(),
+                patient: currentUser,
+                doctor: 'Dr. Ahmad Ismail',
+                date: date,
+                time: time,
+                reason: reason,
+                status: 'Pending',
+                paymentId: transactionId
+            };
+            
+            appointments.push(appointment);
+            
+            alert(`✅ Payment Successful!\n\nTransaction ID: ${transactionId}\nAmount: ₦15,000\n\nYour appointment request has been submitted!`);
+            addNotification('patient', `Appointment booked for ${date} at ${time}. Payment: ₦15,000`);
+            addNotification('doctor', `New appointment request from ${currentUser} (Paid)`);
+            
+            closeModal('bookAppointmentModal');
+            form.reset();
+            renderPatientAppointments();
+            renderDoctorAppointments();
+        }
+
+        function uploadTest(event) {
+            event.preventDefault();
+            alert('✅ Test result uploaded successfully!\n\nDr. Ahmad Ismail has been notified.');
+            addNotification('patient', 'Test result uploaded successfully');
+            addNotification('doctor', `${currentUser} uploaded test result`);
+            closeModal('uploadTestModal');
+            event.target.reset();
+        }
+
+        function approveAppointment(id) {
+            const appointment = appointments.find(a => a.id === id);
+            if (appointment) {
+                appointment.status = 'Confirmed';
+                addNotification('patient', `Your appointment on ${appointment.date} at ${appointment.time} has been confirmed`);
+                addNotification('doctor', `Appointment with ${appointment.patient} confirmed`);
+                renderPatientAppointments();
+                renderDoctorAppointments();
+            }
+        }
+
+        function rejectAppointment(id) {
+            const appointment = appointments.find(a => a.id === id);
+            if (appointment) {
+                appointment.status = 'Rejected';
+                addNotification('patient', `Your appointment request has been rejected. Please book another time.`);
+                addNotification('doctor', `Appointment with ${appointment.patient} rejected`);
+                renderPatientAppointments();
+                renderDoctorAppointments();
+            }
+        }
+
+        function openRescheduleModal(id) {
+            currentRescheduleId = id;
+            const appointment = appointments.find(a => a.id === id);
+            if (appointment) {
+                document.getElementById('currentAppointmentInfo').textContent = 
+                    `${appointment.date} at ${appointment.time} with ${appointment.doctor || appointment.patient}`;
+                openModal('rescheduleModal');
+            }
+        }
+
+        function submitReschedule(event) {
+            event.preventDefault();
+            const newDate = document.getElementById('rescheduleDate').value;
+            const newTime = document.getElementById('rescheduleTime').value;
+            const reason = document.getElementById('rescheduleReason').value;
+            
+            const appointment = appointments.find(a => a.id === currentRescheduleId);
+            if (appointment) {
+                appointment.date = newDate;
+                appointment.time = newTime;
+                appointment.status = 'Confirmed';
+                
+                const message = reason ? 
+                    `Appointment rescheduled to ${newDate} at ${newTime}. Reason: ${reason}` :
+                    `Appointment rescheduled to ${newDate} at ${newTime}`;
+                
+                addNotification('patient', message);
+                addNotification('doctor', `${appointment.patient} rescheduled appointment to ${newDate} at ${newTime}`);
+                
+                alert('✅ Appointment rescheduled successfully!');
+                closeModal('rescheduleModal');
+                event.target.reset();
+                renderPatientAppointments();
+                renderDoctorAppointments();
+            }
+        }
+
+        function cancelAppointment(id) {
+            if (confirm('Are you sure you want to cancel this appointment?')) {
+                appointments = appointments.filter(a => a.id !== id);
+                addNotification('patient', 'Appointment cancelled');
+                addNotification('doctor', `${currentUser} cancelled an appointment`);
+                renderPatientAppointments();
+                renderDoctorAppointments();
+            }
+        }
+
+        // Video Consultation Functions
+        function startVideoConsultation(appointmentId) {
+            currentCallAppointmentId = appointmentId;
+            const appointment = appointments.find(a => a.id === appointmentId);
+            
+            if (currentUserType === 'doctor') {
+                // Doctor initiates the call
+                document.getElementById('consultantNameInCall').textContent = appointment.patient;
+                openModal('videoConsultationModal');
+                initializeVideoCall(true);
+                
+                // Notify patient
+                addNotification('patient', `Video consultation started by ${appointment.doctor}. Click to join!`);
+                
+                // Update appointment status
+                appointment.status = 'In Progress';
+                renderPatientAppointments();
+                renderDoctorAppointments();
+            } else {
+                // Patient joins the call
+                document.getElementById('consultantNameInCall').textContent = appointment.doctor;
+                openModal('videoConsultationModal');
+                initializeVideoCall(false);
+            }
+        }
+
+        async function initializeVideoCall(isInitiator) {
+            try {
+                // Get local media stream
+                localStream = await navigator.mediaDevices.getUserMedia({
+                    video: true,
+                    audio: true
+                });
+                
+                document.getElementById('localVideo').srcObject = localStream;
+                
+                // Create peer connection
+                peerConnection = new RTCPeerConnection(iceConfiguration);
+                
+                // Add local stream to peer connection
+                localStream.getTracks().forEach(track => {
+                    peerConnection.addTrack(track, localStream);
+                });
+                
+                // Handle remote stream
+                peerConnection.ontrack = (event) => {
+                    if (!remoteStream) {
+                        remoteStream = new MediaStream();
+                        document.getElementById('remoteVideo').srcObject = remoteStream;
+                    }
+                    remoteStream.addTrack(event.track);
+                    
+                    // Hide placeholder and show video interface
+                    document.getElementById('waitingRoom').style.display = 'none';
+                    document.getElementById('videoCallInterface').style.display = 'block';
+                    document.getElementById('remoteVideoPlaceholder').style.display = 'none';
+                    
+                    // Start call duration timer
+                    startCallTimer();
+                };
+                
+                // ICE candidate handling (in production, this would go through signaling server)
+                peerConnection.onicecandidate = (event) => {
+                    if (event.candidate) {
+                        console.log('ICE candidate:', event.candidate);
+                        // In production: send to signaling server
+                    }
+                };
+                
+                if (isInitiator) {
+                    // Doctor creates offer
+                    const offer = await peerConnection.createOffer();
+                    await peerConnection.setLocalDescription(offer);
+                    console.log('Offer created:', offer);
+                    // In production: send offer to signaling server
+                    
+                    // Mock: Simulate immediate connection for demo
+                    setTimeout(() => {
+                        mockRemoteConnection();
+                    }, 2000);
+                } else {
+                    // Patient waits for offer then creates answer
+                    // In production: receive offer from signaling server
+                    
+                    // Mock: Simulate connection
+                    setTimeout(() => {
+                        mockRemoteConnection();
+                    }, 1000);
+                }
+                
+            } catch (error) {
+                console.error('Error accessing media devices:', error);
+                alert('❌ Could not access camera/microphone. Please check permissions.');
+                closeModal('videoConsultationModal');
+            }
+        }
+
+        function mockRemoteConnection() {
+            // This simulates a successful peer connection for demo purposes
+            // In production, this would happen through actual WebRTC signaling
+            document.getElementById('waitingRoom').style.display = 'none';
+            document.getElementById('videoCallInterface').style.display = 'block';
+            document.getElementById('remoteVideoPlaceholder').innerHTML = `
+                <div class="text-center text-white">
+                    <div class="text-6xl mb-4">👨‍⚕️</div>
+                    <p class="text-lg">Connected (Demo Mode)</p>
+                    <p class="text-sm text-gray-300 mt-2">In production, this will show the actual video feed</p>
+                </div>
+            `;
+            startCallTimer();
+        }
+
+        function startCallTimer() {
+            callStartTime = Date.now();
+            callDurationInterval = setInterval(() => {
+                const elapsed = Math.floor((Date.now() - callStartTime) / 1000);
+                const minutes = Math.floor(elapsed / 60).toString().padStart(2, '0');
+                const seconds = (elapsed % 60).toString().padStart(2, '0');
+                document.getElementById('callDuration').textContent = `Duration: ${minutes}:${seconds}`;
+            }, 1000);
+        }
+
+        function toggleMute() {
+            if (localStream) {
+                const audioTrack = localStream.getAudioTracks()[0];
+                audioTrack.enabled = !audioTrack.enabled;
+                
+                const btn = document.getElementById('muteBtn');
+                if (audioTrack.enabled) {
+                    btn.classList.remove('bg-red-600');
+                    btn.classList.add('bg-gray-700');
+                } else {
+                    btn.classList.remove('bg-gray-700');
+                    btn.classList.add('bg-red-600');
+                }
+            }
+        }
+
+        function toggleVideo() {
+            if (localStream) {
+                const videoTrack = localStream.getVideoTracks()[0];
+                videoTrack.enabled = !videoTrack.enabled;
+                
+                const btn = document.getElementById('videoToggleBtn');
+                if (videoTrack.enabled) {
+                    btn.classList.remove('bg-red-600');
+                    btn.classList.add('bg-gray-700');
+                } else {
+                    btn.classList.remove('bg-gray-700');
+                    btn.classList.add('bg-red-600');
+                }
+            }
+        }
+
+        function endVideoCall() {
+            // Stop all tracks
+            if (localStream) {
+                localStream.getTracks().forEach(track => track.stop());
+                localStream = null;
+            }
+            
+            if (remoteStream) {
+                remoteStream.getTracks().forEach(track => track.stop());
+                remoteStream = null;
+            }
+            
+            // Close peer connection
+            if (peerConnection) {
+                peerConnection.close();
+                peerConnection = null;
+            }
+            
+            // Stop call timer
+            if (callDurationInterval) {
+                clearInterval(callDurationInterval);
+                callDurationInterval = null;
+            }
+            
+            // Update appointment status
+            if (currentCallAppointmentId) {
+                const appointment = appointments.find(a => a.id === currentCallAppointmentId);
+                if (appointment) {
+                    appointment.status = 'Completed';
+                    addNotification('patient', `Video consultation completed with ${appointment.doctor}`);
+                    addNotification('doctor', `Video consultation with ${appointment.patient} completed`);
+                }
+            }
+            
+            // Reset UI
+            document.getElementById('waitingRoom').style.display = 'block';
+            document.getElementById('videoCallInterface').style.display = 'none';
+            document.getElementById('remoteVideoPlaceholder').style.display = 'flex';
+            
+            closeModal('videoConsultationModal');
+            
+            // Refresh appointments
+            renderPatientAppointments();
+            renderDoctorAppointments();
+            
+            currentCallAppointmentId = null;
+        }
+
+        // Render Functions
+        function renderPatientAppointments() {
+            const userAppointments = appointments.filter(a => a.patient === currentUser);
+            
+            // Desktop view
+            const list = document.getElementById('patientAppointmentsList');
+            if (userAppointments.length === 0) {
+                list.innerHTML = '<div class="text-center text-gray-500 py-8">No appointments yet</div>';
+            } else {
+                list.innerHTML = userAppointments.map(apt => `
+                    <div class="border border-gray-200 rounded-lg p-6 hover:shadow-md transition">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <h3 class="font-bold text-lg text-gray-900">${apt.doctor}</h3>
+                                <p class="text-sm text-gray-600 mt-1">${apt.date} at ${apt.time}</p>
+                                <p class="text-sm text-gray-600">Reason: ${apt.reason}</p>
+                            </div>
+                            <span class="px-3 py-1 rounded-full text-sm font-semibold ${
+                                apt.status === 'Confirmed' ? 'bg-green-100 text-green-800' :
+                                apt.status === 'Pending' ? 'bg-yellow-100 text-yellow-800' :
+                                apt.status === 'In Progress' ? 'bg-blue-100 text-blue-800' :
+                                apt.status === 'Completed' ? 'bg-gray-100 text-gray-800' :
+                                'bg-red-100 text-red-800'
+                            }">
+                                ${apt.status}
+                            </span>
+                        </div>
+                        <div class="flex gap-2">
+                            ${apt.status === 'Confirmed' ? `
+                                <button onclick="startVideoConsultation(${apt.id})" class="flex-1 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-semibold transition">
+                                    Join Call
+                                </button>
+                                <button onclick="openRescheduleModal(${apt.id})" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-semibold transition">
+                                    Reschedule
+                                </button>
+                            ` : apt.status === 'In Progress' ? `
+                                <button onclick="startVideoConsultation(${apt.id})" class="flex-1 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-semibold transition">
+                                    Rejoin Call
+                                </button>
+                            ` : apt.status === 'Pending' ? `
+                                <button onclick="openRescheduleModal(${apt.id})" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-semibold transition">
+                                    Reschedule
+                                </button>
+                            ` : ''}
+                            ${apt.status !== 'Completed' ? `
+                                <button onclick="cancelAppointment(${apt.id})" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-semibold transition">
+                                    Cancel
+                                </button>
+                            ` : ''}
+                        </div>
+                    </div>
+                `).join('');
+            }
+            
+            // Mobile view with better card sizing
+            const listMobile = document.getElementById('patientAppointmentsListMobile');
+            if (userAppointments.length === 0) {
+                listMobile.innerHTML = '<div class="text-center text-gray-500 py-8 w-full">No appointments yet</div>';
+            } else {
+                listMobile.innerHTML = userAppointments.map(apt => `
+                    <div class="border border-gray-200 rounded-lg p-4 bg-white" style="min-width: 300px; max-width: 300px;">
+                        <div class="mb-3">
+                            <h3 class="font-bold text-base text-gray-900">${apt.doctor}</h3>
+                            <p class="text-xs text-gray-600 mt-1">${apt.date} at ${apt.time}</p>
+                            <p class="text-xs text-gray-600">Reason: ${apt.reason}</p>
+                            <span class="inline-block mt-2 px-2 py-1 rounded-full text-xs font-semibold ${
+                                apt.status === 'Confirmed' ? 'bg-green-100 text-green-800' :
+                                apt.status === 'Pending' ? 'bg-yellow-100 text-yellow-800' :
+                                apt.status === 'In Progress' ? 'bg-blue-100 text-blue-800' :
+                                apt.status === 'Completed' ? 'bg-gray-100 text-gray-800' :
+                                'bg-red-100 text-red-800'
+                            }">
+                                ${apt.status}
+                            </span>
+                        </div>
+                        <div class="flex flex-col gap-2">
+                            ${apt.status === 'Confirmed' ? `
+                                <button onclick="startVideoConsultation(${apt.id})" class="w-full bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded-lg text-sm font-semibold transition">
+                                    Join Call
+                                </button>
+                                <button onclick="openRescheduleModal(${apt.id})" class="w-full bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg text-sm font-semibold transition">
+                                    Reschedule
+                                </button>
+                            ` : apt.status === 'In Progress' ? `
+                                <button onclick="startVideoConsultation(${apt.id})" class="w-full bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded-lg text-sm font-semibold transition">
+                                    Rejoin Call
+                                </button>
+                            ` : apt.status === 'Pending' ? `
+                                <button onclick="openRescheduleModal(${apt.id})" class="w-full bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg text-sm font-semibold transition">
+                                    Reschedule
+                                </button>
+                            ` : ''}
+                            ${apt.status !== 'Completed' ? `
+                                <button onclick="cancelAppointment(${apt.id})" class="w-full bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded-lg text-sm font-semibold transition">
+                                    Cancel
+                                </button>
+                            ` : ''}
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function renderDoctorAppointments() {
+            const pendingRequests = appointments.filter(a => a.status === 'Pending');
+            const confirmedAppointments = appointments.filter(a => a.status !== 'Pending');
+            
+            // Render requests - Desktop
+            const requestsList = document.getElementById('doctorRequestsList');
+            if (pendingRequests.length === 0) {
+                requestsList.innerHTML = '<div class="text-center text-gray-500 py-8">No pending requests</div>';
+            } else {
+                requestsList.innerHTML = pendingRequests.map(apt => `
+                    <div class="border border-gray-200 rounded-lg p-6 hover:shadow-md transition">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <h3 class="font-bold text-lg text-gray-900">${apt.patient}</h3>
+                                <p class="text-sm text-gray-600 mt-1">${apt.date} at ${apt.time}</p>
+                                <p class="text-sm text-gray-600">Reason: ${apt.reason}</p>
+                            </div>
+                            <span class="px-3 py-1 rounded-full text-sm font-semibold bg-yellow-100 text-yellow-800">
+                                ${apt.status}
+                            </span>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="approveAppointment(${apt.id})" class="flex-1 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-semibold transition">
+                                Approve
+                            </button>
+                            <button onclick="rejectAppointment(${apt.id})" class="flex-1 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-semibold transition">
+                                Reject
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+            
+            // Render requests - Mobile
+            const requestsListMobile = document.getElementById('doctorRequestsListMobile');
+            if (pendingRequests.length === 0) {
+                requestsListMobile.innerHTML = '<div class="text-center text-gray-500 py-8 w-full">No pending requests</div>';
+            } else {
+                requestsListMobile.innerHTML = pendingRequests.map(apt => `
+                    <div class="border border-gray-200 rounded-lg p-4 bg-white" style="min-width: 300px; max-width: 300px;">
+                        <div class="mb-3">
+                            <h3 class="font-bold text-base text-gray-900">${apt.patient}</h3>
+                            <p class="text-xs text-gray-600 mt-1">${apt.date} at ${apt.time}</p>
+                            <p class="text-xs text-gray-600">Reason: ${apt.reason}</p>
+                            <span class="inline-block mt-2 px-2 py-1 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-800">
+                                ${apt.status}
+                            </span>
+                        </div>
+                        <div class="flex flex-col gap-2">
+                            <button onclick="approveAppointment(${apt.id})" class="w-full bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded-lg text-sm font-semibold transition">
+                                Approve
+                            </button>
+                            <button onclick="rejectAppointment(${apt.id})" class="w-full bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded-lg text-sm font-semibold transition">
+                                Reject
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+            
+            // Render appointments - Desktop
+            const appointmentsList = document.getElementById('doctorAppointmentsList');
+            if (confirmedAppointments.length === 0) {
+                appointmentsList.innerHTML = '<div class="text-center text-gray-500 py-8">No confirmed appointments</div>';
+            } else {
+                appointmentsList.innerHTML = confirmedAppointments.map(apt => `
+                    <div class="border border-gray-200 rounded-lg p-6 hover:shadow-md transition">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <h3 class="font-bold text-lg text-gray-900">${apt.patient}</h3>
+                                <p class="text-sm text-gray-600 mt-1">${apt.date} at ${apt.time}</p>
+                                <p class="text-sm text-gray-600">Reason: ${apt.reason}</p>
+                            </div>
+                            <span class="px-3 py-1 rounded-full text-sm font-semibold ${
+                                apt.status === 'Confirmed' ? 'bg-green-100 text-green-800' :
+                                apt.status === 'In Progress' ? 'bg-blue-100 text-blue-800' :
+                                apt.status === 'Completed' ? 'bg-gray-100 text-gray-800' :
+                                'bg-red-100 text-red-800'
+                            }">
+                                ${apt.status}
+                            </span>
+                        </div>
+                        <div class="flex gap-2">
+                            ${apt.status === 'Confirmed' ? `
+                                <button onclick="startVideoConsultation(${apt.id})" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-semibold transition">
+                                    Start Consultation
+                                </button>
+                            ` : apt.status === 'In Progress' ? `
+                                <button onclick="startVideoConsultation(${apt.id})" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-semibold transition">
+                                    Return to Call
+                                </button>
+                            ` : ''}
+                        </div>
+                    </div>
+                `).join('');
+            }
+            
+            // Render appointments - Mobile
+            const appointmentsListMobile = document.getElementById('doctorAppointmentsListMobile');
+            if (confirmedAppointments.length === 0) {
+                appointmentsListMobile.innerHTML = '<div class="text-center text-gray-500 py-8 w-full">No confirmed appointments</div>';
+            } else {
+                appointmentsListMobile.innerHTML = confirmedAppointments.map(apt => `
+                    <div class="border border-gray-200 rounded-lg p-4 bg-white" style="min-width: 300px; max-width: 300px;">
+                        <div class="mb-3">
+                            <h3 class="font-bold text-base text-gray-900">${apt.patient}</h3>
+                            <p class="text-xs text-gray-600 mt-1">${apt.date} at ${apt.time}</p>
+                            <p class="text-xs text-gray-600">Reason: ${apt.reason}</p>
+                            <span class="inline-block mt-2 px-2 py-1 rounded-full text-xs font-semibold ${
+                                apt.status === 'Confirmed' ? 'bg-green-100 text-green-800' :
+                                apt.status === 'In Progress' ? 'bg-blue-100 text-blue-800' :
+                                apt.status === 'Completed' ? 'bg-gray-100 text-gray-800' :
+                                'bg-red-100 text-red-800'
+                            }">
+                                ${apt.status}
+                            </span>
+                        </div>
+                        <div class="flex flex-col gap-2">
+                            ${apt.status === 'Confirmed' ? `
+                                <button onclick="startVideoConsultation(${apt.id})" class="w-full bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg text-sm font-semibold transition">
+                                    Start Consultation
+                                </button>
+                            ` : apt.status === 'In Progress' ? `
+                                <button onclick="startVideoConsultation(${apt.id})" class="w-full bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg text-sm font-semibold transition">
+                                    Return to Call
+                                </button>
+                            ` : ''}
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        // Doctor Functions
+        function createPatient(event) {
+            event.preventDefault();
+            alert('✅ Patient account created successfully!\n\nUnique Patient ID: DCP-2026-' + Math.floor(Math.random() * 10000));
+            addNotification('doctor', 'New patient account created');
+            closeModal('createPatientModal');
+            event.target.reset();
+        }
+
+        function createPrescription(event) {
+            event.preventDefault();
+            const patientName = document.getElementById('prescriptionPatient').value;
+            alert(`✅ E-Prescription generated for ${patientName}!\n\nPDF created and sent to patient portal.`);
+            addNotification('patient', 'New prescription received from Dr. Ahmad Ismail');
+            addNotification('doctor', `Prescription created for ${patientName}`);
+            closeModal('prescriptionModal');
+            event.target.reset();
+        }
+
+        function requestLabTests(event) {
+            event.preventDefault();
+            alert('✅ Lab test request sent!\n\nPatient has been notified via portal.');
+            addNotification('patient', 'New lab test request from Dr. Ahmad Ismail');
+            addNotification('doctor', 'Lab test request sent successfully');
+            closeModal('labTestModal');
+            event.target.reset();
+        }
+
+        function saveAvailability(event) {
+            event.preventDefault();
+            const checkboxes = event.target.querySelectorAll('input[type="checkbox"]:checked');
+            const days = Array.from(checkboxes).map(cb => cb.value);
+            
+            if (days.length === 0) {
+                alert('❌ Please select at least one day');
+                return;
+            }
+            
+            availableDays = days;
+            
+            // Update the availability banner
+            const banner = document.getElementById('availabilityBanner');
+            if (banner) {
+                const daysSpan = banner.querySelector('#availableDays') || banner.querySelector('strong');
+                if (daysSpan) {
+                    daysSpan.textContent = days.join(', ');
+                }
+            }
+            
+            alert('✅ Availability updated successfully!\n\nAvailable days: ' + days.join(', '));
+            addNotification('doctor', 'Availability settings updated');
+            closeModal('availabilityModal');
+        }
+
+        // Registration and Navigation Functions
+        function showRegister() {
+            hideAllSections();
+            document.getElementById('registerSection').classList.add('active');
+        }
+
+        function handleRegister(event) {
+            event.preventDefault();
+            const name = document.getElementById('regName').value.trim();
+            const username = document.getElementById('regUsername').value.trim().toLowerCase();
+            
+            if (patients.some(p => p.username === username)) {
+                alert('❌ Username already taken!');
+                return;
+            }
+            
+            patients.push({
+                username,
+                name,
+                password: document.getElementById('regPassword').value,
+                email: document.getElementById('regEmail').value.trim(),
+                phone: document.getElementById('regPhone').value.trim(),
+                age: document.getElementById('regAge').value,
+                gender: document.getElementById('regGender').value,
+                prescriptions: [],
+                labTests: []
+            });
+            
+            alert('✅ Account created successfully!\n\nYou can now login with your credentials.');
+            showLogin('patient');
+            event.target.reset();
+        }
+
+        function hideAllNavs() {
+            const navs = ['publicNav', 'patientNav', 'doctorNav'];
+            navs.forEach(navId => {
+                const nav = document.getElementById(navId);
+                if (nav) nav.classList.add('hidden');
+            });
+        }
+
+        // Payment History Functions
+        function loadPaymentHistory() {
+            const list = document.getElementById('paymentHistoryList');
+            const userPayments = payments.filter(p => p.patient === currentUser);
+            
+            if (userPayments.length === 0) {
+                list.innerHTML = `
+                    <div class="text-center py-12 text-gray-500">
+                        <div class="text-5xl mb-4">💳</div>
+                        <p>No payment history yet</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            list.innerHTML = userPayments.map(payment => `
+                <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition">
+                    <div class="flex justify-between items-start mb-2">
+                        <div>
+                            <p class="font-semibold text-gray-900">Transaction ID: ${payment.transactionId}</p>
+                            <p class="text-sm text-gray-600">${payment.date}</p>
+                        </div>
+                        <span class="text-green-600 font-bold">₦${payment.amount.toLocaleString()}</span>
+                    </div>
+                    <div class="text-sm text-gray-600">
+                        <p>Purpose: ${payment.purpose}</p>
+                        <p>Status: <span class="text-green-600 font-semibold">✅ Paid</span></p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Medical History Functions
+        function loadMedicalHistory() {
+            const currentPatient = patients.find(p => p.name === currentUser);
+            if (!currentPatient) return;
+            
+            // Load appointments
+            const userAppts = appointments.filter(a => a.patient === currentUser && a.status === 'Completed');
+            const apptsContainer = document.getElementById('medicalHistoryAppointments');
+            
+            if (userAppts.length === 0) {
+                apptsContainer.innerHTML = '<p class="text-gray-500 text-sm">No appointment history</p>';
+            } else {
+                apptsContainer.innerHTML = userAppts.map(apt => `
+                    <div class="border border-gray-200 rounded-lg p-3 text-sm">
+                        <p class="font-semibold">${apt.date} at ${apt.time}</p>
+                        <p class="text-gray-600">Reason: ${apt.reason}</p>
+                        <p class="text-gray-600">Status: Completed</p>
+                    </div>
+                `).join('');
+            }
+            
+            // Load prescriptions
+            const prescContainer = document.getElementById('medicalHistoryPrescriptions');
+            if (currentPatient.prescriptions.length === 0) {
+                prescContainer.innerHTML = '<p class="text-gray-500 text-sm">No prescriptions yet</p>';
+            } else {
+                prescContainer.innerHTML = currentPatient.prescriptions.map(presc => `
+                    <div class="border border-gray-200 rounded-lg p-3 text-sm">
+                        <p class="font-semibold">${presc.date}</p>
+                        <p class="text-gray-600">${presc.medication}</p>
+                    </div>
+                `).join('');
+            }
+            
+            // Load lab tests
+            const labContainer = document.getElementById('medicalHistoryLabTests');
+            if (currentPatient.labTests.length === 0) {
+                labContainer.innerHTML = '<p class="text-gray-500 text-sm">No lab test results yet</p>';
+            } else {
+                labContainer.innerHTML = currentPatient.labTests.map(test => `
+                    <div class="border border-gray-200 rounded-lg p-3 text-sm">
+                        <p class="font-semibold">${test.date}</p>
+                        <p class="text-gray-600">${test.testType}</p>
+                    </div>
+                `).join('');
+            }
+        }
+
+        // Patient Management Functions
+        function loadPatientManagement() {
+            const select = document.getElementById('patientSelect');
+            select.innerHTML = '<option value="">Choose a patient</option>' + 
+                patients.map(p => `<option value="${p.username}">${p.name}</option>`).join('');
+        }
+
+        function loadPatientDetails() {
+            const select = document.getElementById('patientSelect');
+            const username = select.value;
+            const container = document.getElementById('patientDetailsContainer');
+            
+            if (!username) {
+                container.classList.add('hidden');
+                return;
+            }
+            
+            const patient = patients.find(p => p.username === username);
+            if (!patient) return;
+            
+            // Show container
+            container.classList.remove('hidden');
+            
+            // Populate patient info
+            document.getElementById('pmPatientName').textContent = patient.name;
+            document.getElementById('pmPatientAge').textContent = patient.age;
+            document.getElementById('pmPatientGender').textContent = patient.gender;
+            document.getElementById('pmPatientPhone').textContent = patient.phone;
+            
+            // Load all records
+            filterPatientRecords();
+        }
+
+        function filterPatientRecords() {
+            const select = document.getElementById('patientSelect');
+            const username = select.value;
+            if (!username) return;
+            
+            const patient = patients.find(p => p.username === username);
+            if (!patient) return;
+            
+            const fromDate = document.getElementById('pmFromDate').value;
+            const toDate = document.getElementById('pmToDate').value;
+            
+            // Filter appointments
+            let patientAppts = appointments.filter(a => a.patient === patient.name);
+            if (fromDate) patientAppts = patientAppts.filter(a => a.date >= fromDate);
+            if (toDate) patientAppts = patientAppts.filter(a => a.date <= toDate);
+            
+            const apptsContainer = document.getElementById('pmAppointments');
+            if (patientAppts.length === 0) {
+                apptsContainer.innerHTML = '<p class="text-gray-500 text-sm">No appointments found</p>';
+            } else {
+                apptsContainer.innerHTML = patientAppts.map(apt => `
+                    <div class="border border-gray-200 rounded-lg p-3 text-sm">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="font-semibold">${apt.date} at ${apt.time}</p>
+                                <p class="text-gray-600">Reason: ${apt.reason}</p>
+                                <p class="text-gray-600">Status: ${apt.status}</p>
+                            </div>
+                            ${apt.status === 'In Progress' ? `
+                                <button onclick="markCompleted(${apt.id})" class="px-3 py-1 bg-green-600 text-white text-xs rounded-lg hover:bg-green-700">
+                                    Mark Completed
+                                </button>
+                            ` : ''}
+                        </div>
+                    </div>
+                `).join('');
+            }
+            
+            // Filter prescriptions
+            let prescriptions = patient.prescriptions || [];
+            if (fromDate) prescriptions = prescriptions.filter(p => p.date >= fromDate);
+            if (toDate) prescriptions = prescriptions.filter(p => p.date <= toDate);
+            
+            const prescContainer = document.getElementById('pmPrescriptions');
+            if (prescriptions.length === 0) {
+                prescContainer.innerHTML = '<p class="text-gray-500 text-sm">No prescriptions found</p>';
+            } else {
+                prescContainer.innerHTML = prescriptions.map(presc => `
+                    <div class="border border-gray-200 rounded-lg p-3 text-sm">
+                        <p class="font-semibold">${presc.date}</p>
+                        <p class="text-gray-600">${presc.medication}</p>
+                    </div>
+                `).join('');
+            }
+            
+            // Filter lab results
+            let labTests = patient.labTests || [];
+            if (fromDate) labTests = labTests.filter(l => l.date >= fromDate);
+            if (toDate) labTests = labTests.filter(l => l.date <= toDate);
+            
+            const labContainer = document.getElementById('pmLabResults');
+            if (labTests.length === 0) {
+                labContainer.innerHTML = '<p class="text-gray-500 text-sm">No lab results found</p>';
+            } else {
+                labContainer.innerHTML = labTests.map(test => `
+                    <div class="border border-gray-200 rounded-lg p-3 text-sm">
+                        <p class="font-semibold">${test.date}</p>
+                        <p class="text-gray-600">${test.testType}</p>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function markCompleted(appointmentId) {
+            const appointment = appointments.find(a => a.id === appointmentId);
+            if (appointment) {
+                appointment.status = 'Completed';
+                alert('✅ Appointment marked as completed!');
+                addNotification('patient', 'Your appointment has been marked as completed');
+                addNotification('doctor', `Appointment with ${appointment.patient} marked as completed`);
+                filterPatientRecords();
+                renderPatientAppointments();
+                renderDoctorAppointments();
+            }
+        }
+
+        // Initialize Test Data
+        function initializeTestData() {
+            // Add some sample notifications
+            setTimeout(() => {
+                addNotification('patient', 'Welcome to DiabetesCare Telemedicine Platform!');
+                addNotification('doctor', 'Welcome to your consultant dashboard!');
+            }, 1000);
+        }
+    </script>
+</body>
+</html>
+
+i am ok with this code but i need just:
+1. where ever that icon of health used my logo picture name theclinic.png should be used.
+2. please each patient must have a unique id number and and is automatically generated when onboarding the patient for the demo please create the mockup id number. so you know people may have the same name it id number that will help
+3. i only have one doctor who is ahmad ismail so that doctors dropdown should be removed and he is diabetes doctor
+4.  patient cannot start call it is only the consultant that can start it and the status for appointment from the patient portal can only show completed when the consultant click completed not just because the call has been made or completed 
+i see all other things ok and should be maintain please.
