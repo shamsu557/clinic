@@ -1,20 +1,48 @@
 {
-  "name": "diabetescare-telemedicine",
+  "name": "clinic-management",
   "version": "1.0.0",
   "private": true,
-  "description": "DiabetesCare Telemedicine Platform - Node.js + Express server",
-  "main": "app.js",
+  "description": "The Clinic DiabetesCare telemedicine portal (Express + MySQL)",
+  "main": "server.js",
   "scripts": {
-    "start": "node app.js",
-    "dev": "nodemon app.js"
+    "start": "node server.js",
+    "migrate": "node scripts/migrate.js",
+    "create-owner": "node hash.js",
+    "build:css": "tailwindcss -c tailwind.config.js -i src/styles/input.css -o public/assets/app.css --minify",
+    "test:api": "node tests/api.test.js",
+    "test:ui": "node tests/ui.smoke.js",
+    "hash": "node hash.js",
+    "db:check": "node scripts/db-check.js",
+    "test:pwa": "node tests/pwa.test.js",
+    "test:contact": "node tests/contact.test.js"
   },
   "dependencies": {
-    "express": "^4.21.0"
+    "bcryptjs": "^3.0.3",
+    "dotenv": "^18.0.7",
+    "express": "^4.22.3",
+    "express-mysql-session": "^3.0.3",
+    "express-rate-limit": "^8.7.1",
+    "express-session": "^1.19.0",
+    "helmet": "^8.3.0",
+    "multer": "^2.4.0",
+    "mysql2": "^3.24.6",
+    "nodemailer": "^10.1.1",
+    "pdfkit": "^0.20.2",
+    "validator": "^13.15.35"
   },
   "devDependencies": {
-    "nodemon": "^3.1.7"
+    "@fontsource/cinzel": "^5.3.0",
+    "@fontsource/cormorant-garamond": "^5.3.0",
+    "@fontsource/inter": "^5.3.0",
+    "jsdom": "^30.1.3",
+    "nodemon": "^3.1.7",
+    "sharp": "^0.35.5",
+    "tailwindcss": "^3.4.19"
   },
   "engines": {
     "node": ">=18"
-  }
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }

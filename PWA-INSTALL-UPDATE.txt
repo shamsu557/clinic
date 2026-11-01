@@ -1,0 +1,39 @@
+THE CLINIC — PWA INSTALLATION UPDATE (31 October 2026)
+
+Changes
+- Desktop (Chrome/Edge): Show an Install App popup with a working button where the browser makes native installation available. Otherwise the button displays the browser-menu instructions.
+- Android: Show the short Install App popup, with a native install button when supported, and manual steps otherwise.
+- iPhone/iPad: Show Install App; the button explains Safari Share > Add to Home Screen > Add (Apple does not provide a web-page installation API).
+- Maybe Later / Close: Hide only for the current page visit; the reminder returns on a later load if not installed.
+- Successfully installed: Hide in standalone-app mode. Native browser installation events also remember a successful installation in that browser.
+- Service worker cache updated to refresh the installation script and styles.
+
+UPDATED FILES (paths relative to the folder containing server.js)
+  public/assets/js/pwa-install.js
+  public/assets/pwa.css
+  public/index.html
+  public/sw.js
+  tests/pwa.test.js
+
+DEPLOYMENT - UPDATED FILES ZIP
+1. Back up the app before replacement.
+2. Copy the five files into their exact matching paths on the server.
+3. Keep the existing server-side .env and uploads/ (patient documents) unchanged.
+4. Restart your Node.js app in cPanel.
+5. Close any existing site tabs and reopen over HTTPS. Refresh the browser if it still shows the old script.
+6. Test on Chrome/Edge desktop, Chrome Android, and iPhone Safari. Installability must meet each browser's requirements.
+
+COMPLETE SOURCE ZIP
+Extract the clinic/ application directory. node_modules/, .env, server logs, and patient uploads are intentionally excluded; keep them on your server. Run npm install (or npm ci) if you are deploying to a new environment.
+
+NOTES
+- Browser vendors control whether and when a native installation dialog can appear; no website can force it. The Install App button shows appropriate browser instructions when the native prompt is unavailable.
+- iOS does not expose a reliable API to a normal Safari tab to report whether its Home Screen web app was installed. The popup stops inside the installed Home Screen app, but may continue in the Safari tab. This is an operating-system limitation.
+- The installed-state marker is saved only on a successful native installation event, never when selecting Maybe Later.
+- Website and PWA require HTTPS (localhost is the exception for local development).
+- No database changes or migrations are required.
+
+TESTING
+Run from the application root:
+  npm run test:pwa
+This tests desktop, Android, iOS, native prompt, repeat visits, successful installation, standalone detection, and public-only service-worker caching.
